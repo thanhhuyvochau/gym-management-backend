@@ -19,10 +19,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-public class SpringBootBaseProject {
+public class GymManagementApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootBaseProject.class, args);
-
+        SpringApplication.run(GymManagementApplication.class, args);
     }
 }
 

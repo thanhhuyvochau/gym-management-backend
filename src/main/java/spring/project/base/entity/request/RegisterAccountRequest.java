@@ -15,12 +15,10 @@ public class RegisterAccountRequest {
     private String phone;
     @NotNull
     private String password;
-    @NotNull
-    private EUserRole role;
-
     private EGenderType gender;
     @NotNull
     private Instant birthDay;
+
     public String getFullName() {
         return fullName;
     }
@@ -51,14 +49,6 @@ public class RegisterAccountRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public EUserRole getRole() {
-        return role;
-    }
-
-    public void setRole(EUserRole role) {
-        this.role = role;
     }
 
     public EGenderType getGender() {
