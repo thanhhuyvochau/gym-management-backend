@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
-import spring.project.base.entity.common.ApiException;
+import spring.project.base.common.ApiException;
 import spring.project.base.service.IUserService;
 
 @Service

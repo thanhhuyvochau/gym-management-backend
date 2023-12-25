@@ -15,13 +15,14 @@ import spring.project.base.config.security.oauth2.user.OAuth2UserInfoFactory;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Role;
 import spring.project.base.entity.Verification;
-import spring.project.base.entity.common.ApiException;
-import spring.project.base.entity.constant.EGenderType;
-import spring.project.base.entity.constant.EVerifyStatus;
-import spring.project.base.entity.dto.UserDto;
-import spring.project.base.entity.request.ChangePasswordRequest;
-import spring.project.base.entity.request.RegisterAccountRequest;
-import spring.project.base.entity.response.VerifyResponse;
+import spring.project.base.common.ApiException;
+import spring.project.base.constant.EGenderType;
+import spring.project.base.constant.EUserRole;
+import spring.project.base.constant.EVerifyStatus;
+import spring.project.base.dto.response.UserResponse;
+import spring.project.base.dto.request.ChangePasswordRequest;
+import spring.project.base.dto.request.RegisterAccountRequest;
+import spring.project.base.dto.response.VerifyResponse;
 import spring.project.base.repository.RoleRepository;
 import spring.project.base.repository.AccountRepository;
 import spring.project.base.repository.VerificationRepository;
@@ -85,7 +86,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDto getLoginUser() {
+    public UserResponse getLoginUser() {
         Account currentLoginAccount = getCurrentLoginUser();
         return ConvertUtil.convertUsertoUserDto(currentLoginAccount);
     }
@@ -126,19 +127,25 @@ public class UserServiceImpl implements IUserService {
             throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.REGISTERED_EMAIL) + createAccountRequest.getEmail());
         }
 
-//        if (Boolean.TRUE.equals(accountRepository.existsByPhone(createAccountRequest.getPhone()))) {
-//            throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(Constants
-//            .ErrorMessage.REGISTERED_PHONE_NUMBER) + createAccountRequest.getPhone());
-//        }
+        if (Boolean.TRUE.equals(accountRepository.existsAccountByPhone(createAccountRequest.getPhone()))) {
+            throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(Constants
+                    .ErrorMessage.REGISTERED_PHONE_NUMBER) + createAccountRequest.getPhone());
+        }
         Role role =
-                roleRepository.findRoleByCode(createAccountRequest.getRole()).orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND).withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.ROLE_NOT_FOUND_BY_CODE) + createAccountRequest.getRole()));
+                roleRepository.findRoleByCode(EUserRole.GYM_OWNER).orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND).withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.ROLE_NOT_FOUND_BY_CODE) + EUserRole.GYM_OWNER));
         if (!TimeUtil.isValidBirthday(createAccountRequest.getBirthDay())) {
             throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Invalid.INVALID_BIRTH_DAY));
         }
         account.setEmail(createAccountRequest.getEmail());
         account.setPassword(encoder.encode(createAccountRequest.getPassword()));
         account.setRole(role);
+        account.setGender(createAccountRequest.getGender());
+        account.setFullName(createAccountRequest.getFullName());
+        account.setPhone(createAccountRequest.getPhone());
+        account.setVerified(true);
+        account.setStatus(true);
         Account savedAccount = accountRepository.save(account);
+
         // Send verify mail
         /**
          *  emailUtil.sendVerifyEmailTo(savedAccount);

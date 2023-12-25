@@ -2,8 +2,8 @@ package spring.project.base.config.security.oauth2.user;
 
 
 import org.springframework.http.HttpStatus;
-import spring.project.base.entity.common.ApiException;
-import spring.project.base.entity.constant.SocialProvider;
+import spring.project.base.common.ApiException;
+import spring.project.base.constant.SocialProvider;
 
 import java.util.Map;
 

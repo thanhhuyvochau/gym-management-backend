@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Role;
-import spring.project.base.entity.dto.RoleDto;
-import spring.project.base.entity.dto.UserDto;
+import spring.project.base.dto.response.RoleResponse;
+import spring.project.base.dto.response.UserResponse;
 import spring.project.base.util.message.MessageUtil;
 
 @Component
@@ -29,13 +29,13 @@ public class ConvertUtil {
     }
 
 
-
-    public static RoleDto convertRoleToRoleDto(Role role) {
-        RoleDto roleDto = ObjectUtil.copyProperties(role, new RoleDto(), RoleDto.class);
-        roleDto.setName(role.getCode().getName());
-        return roleDto;
+    public static RoleResponse convertRoleToRoleDto(Role role) {
+        RoleResponse roleResponse = ObjectUtil.copyProperties(role, new RoleResponse(), RoleResponse.class);
+        roleResponse.setName(role.getCode().getName());
+        return roleResponse;
     }
-    public static UserDto convertUsertoUserDto(Account account) {
-        return new UserDto();
+
+    public static UserResponse convertUsertoUserDto(Account account) {
+        return ObjectUtil.copyProperties(account, new UserResponse(), UserResponse.class, true);
     }
 }

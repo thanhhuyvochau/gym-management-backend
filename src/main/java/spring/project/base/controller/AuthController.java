@@ -3,12 +3,12 @@ package spring.project.base.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spring.project.base.entity.common.ApiException;
-import spring.project.base.entity.common.ApiResponse;
-import spring.project.base.entity.constant.EVerifyStatus;
-import spring.project.base.entity.request.JwtResponse;
-import spring.project.base.entity.request.LoginRequest;
-import spring.project.base.entity.response.VerifyResponse;
+import spring.project.base.common.ApiException;
+import spring.project.base.common.ApiResponse;
+import spring.project.base.constant.EVerifyStatus;
+import spring.project.base.dto.request.JwtResponse;
+import spring.project.base.dto.request.LoginRequest;
+import spring.project.base.dto.response.VerifyResponse;
 import spring.project.base.service.IAuthService;
 import spring.project.base.service.IUserService;
 

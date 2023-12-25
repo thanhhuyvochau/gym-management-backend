@@ -3,7 +3,7 @@ package spring.project.base.util.mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import spring.project.base.entity.common.ApiPage;
+import spring.project.base.common.ApiPage;
 
 import java.util.ArrayList;
 import java.util.List;

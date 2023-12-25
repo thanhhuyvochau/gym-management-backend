@@ -1,7 +1,7 @@
 package spring.project.base.config.security.oauth2.dto;
 
 
-import spring.project.base.entity.constant.SocialProvider;
+import spring.project.base.constant.SocialProvider;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;

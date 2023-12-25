@@ -2,7 +2,8 @@ package spring.project.base.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import spring.project.base.entity.constant.SocialProvider;
+import spring.project.base.constant.EGenderType;
+import spring.project.base.constant.SocialProvider;
 
 import javax.persistence.*;
 
@@ -35,6 +36,14 @@ public class Account extends BaseEntity {
     private boolean verified = false;
 
     private SocialProvider provider = SocialProvider.LOCAL;
+
+    @Column(name = "full_name")
+    private String fullName;
+    @Column(name = "phone")
+    private String phone;
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private EGenderType gender;
 
     public Long getId() {
         return id;
@@ -102,5 +111,29 @@ public class Account extends BaseEntity {
 
     public void setProvider(SocialProvider provider) {
         this.provider = provider;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public EGenderType getGender() {
+        return gender;
+    }
+
+    public void setGender(EGenderType gender) {
+        this.gender = gender;
     }
 }

@@ -6,9 +6,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import spring.project.base.entity.common.ApiException;
-import spring.project.base.entity.common.ApiResponse;
-import spring.project.base.entity.common.ValidationErrorsException;
+import spring.project.base.common.ApiException;
+import spring.project.base.common.ApiResponse;
+import spring.project.base.common.ValidationErrorsException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

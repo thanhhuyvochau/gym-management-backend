@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import spring.project.base.entity.Notification;
-import spring.project.base.entity.common.ApiResponse;
-import spring.project.base.entity.dto.ResponseMessage;
+import spring.project.base.common.ApiResponse;
+import spring.project.base.dto.response.ResponseMessage;
 
 @Component
 public class WebSocketUtil {

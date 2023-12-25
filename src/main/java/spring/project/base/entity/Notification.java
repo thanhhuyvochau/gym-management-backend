@@ -1,7 +1,7 @@
 package spring.project.base.entity;
 
-import spring.project.base.entity.constant.ENotificationEntity;
-import spring.project.base.entity.constant.ENotificationType;
+import spring.project.base.constant.ENotificationEntity;
+import spring.project.base.constant.ENotificationType;
 
 import javax.persistence.*;
 import java.security.InvalidParameterException;

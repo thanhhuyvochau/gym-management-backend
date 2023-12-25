@@ -10,13 +10,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Verification;
-import spring.project.base.entity.common.ApiException;
+import spring.project.base.common.ApiException;
 import spring.project.base.repository.VerificationRepository;
 
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 

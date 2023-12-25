@@ -1,7 +1,7 @@
 package spring.project.base.entity;
 
 
-import spring.project.base.entity.constant.EUserRole;
+import spring.project.base.constant.EUserRole;
 
 import javax.persistence.*;
 import java.util.ArrayList;

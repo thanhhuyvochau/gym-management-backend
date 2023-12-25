@@ -7,6 +7,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import spring.project.base.entity.Role;
+import spring.project.base.constant.EUserRole;
+import spring.project.base.repository.RoleRepository;
+
+import java.util.List;
 
 
 @SpringBootApplication
@@ -20,8 +27,28 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         scheme = "bearer"
 )
 public class GymManagementApplication {
+    private final RoleRepository roleRepository;
+
+    public GymManagementApplication(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(GymManagementApplication.class, args);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void runAfterStartup() {
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
+            for (EUserRole eUserRole : EUserRole.values()) {
+                Role role = new Role();
+                role.setCode(eUserRole);
+                role.setName(eUserRole.getName());
+                roles.add(role);
+            }
+            roleRepository.saveAll(roles);
+        }
     }
 }
 
