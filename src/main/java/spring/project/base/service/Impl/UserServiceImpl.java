@@ -144,6 +144,7 @@ public class UserServiceImpl implements IUserService {
         account.setPhone(createAccountRequest.getPhone());
         account.setVerified(true);
         account.setStatus(true);
+        account.setAddress(createAccountRequest.getAddress());
         Account savedAccount = accountRepository.save(account);
 
         // Send verify mail

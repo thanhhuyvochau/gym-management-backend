@@ -17,6 +17,8 @@ public class RegisterAccountRequest {
     private EGenderType gender;
     @NotNull
     private Instant birthDay;
+    @NotNull
+    private String address;
 
     public String getFullName() {
         return fullName;
@@ -64,5 +66,13 @@ public class RegisterAccountRequest {
 
     public void setBirthDay(Instant birthDay) {
         this.birthDay = birthDay;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
