@@ -25,7 +25,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     private final OidcIdToken idToken;
     private final OidcUserInfo userInfo;
     private Map<String, Object> attributes;
-    private Account account;
+    private final Account account;
 
     public LocalUser(final String userID, final String password, final boolean enabled,
                      final boolean accountNonExpired, final boolean credentialsNonExpired,
@@ -48,7 +48,7 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
 
     public static LocalUser create(Account account, Map<String, Object> attributes, OidcIdToken idToken,
                                    OidcUserInfo userInfo) {
-        LocalUser localUser = new LocalUser(account.getEmail(), account.getPassword(), account.getStatus(), true,
+        LocalUser localUser = new LocalUser(account.getEmail(), account.getPassword(), account.isStatus(), true,
                 true, true,
                 GeneralUtils.buildSimpleGrantedAuthorities(account.getRole()),
                 account, idToken, userInfo);

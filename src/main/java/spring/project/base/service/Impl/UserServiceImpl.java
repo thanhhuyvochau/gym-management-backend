@@ -205,7 +205,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Boolean resendVerifyEmail() {
         Account currentAccount = SecurityUtil.getCurrentUser();
-        if (currentAccount.getVerified()) {
+        if (currentAccount.isVerified()) {
             throw ApiException.create(HttpStatus.FORBIDDEN).withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.VERIFIED_ACCOUNT));
         } else {
             emailUtil.sendVerifyEmailTo(currentAccount);

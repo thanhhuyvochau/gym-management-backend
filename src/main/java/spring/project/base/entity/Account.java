@@ -2,14 +2,22 @@ package spring.project.base.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import spring.project.base.constant.EGenderType;
 import spring.project.base.constant.SocialProvider;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "account")
+@Data
 public class Account extends BaseEntity {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,96 +52,6 @@ public class Account extends BaseEntity {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private EGenderType gender;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public boolean getVerified() {
-        return verified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
-    }
-
-    public SocialProvider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(SocialProvider provider) {
-        this.provider = provider;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public EGenderType getGender() {
-        return gender;
-    }
-
-    public void setGender(EGenderType gender) {
-        this.gender = gender;
-    }
+    @OneToMany(mappedBy = "gymOwner")
+    private List<GymPlan> gymPlans = new ArrayList<>();
 }
