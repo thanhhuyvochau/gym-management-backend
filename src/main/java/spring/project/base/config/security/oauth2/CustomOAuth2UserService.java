@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import spring.project.base.common.ApiException;
-import spring.project.base.service.IUserService;
+import spring.project.base.service.IAccountService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private IUserService userService;
+    private IAccountService userService;
 
     @Autowired
     private Environment env;

@@ -8,16 +8,16 @@ import spring.project.base.common.ApiResponse;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.request.ChangePasswordRequest;
 import spring.project.base.dto.request.RegisterAccountRequest;
-import spring.project.base.service.IUserService;
+import spring.project.base.service.IAccountService;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final IUserService iUserService;
+    private final IAccountService iUserService;
 
-    public UserController(IUserService iUserService) {
+    public UserController(IAccountService iUserService) {
         this.iUserService = iUserService;
     }
 

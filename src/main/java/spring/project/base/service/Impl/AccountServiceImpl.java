@@ -26,7 +26,7 @@ import spring.project.base.dto.response.VerifyResponse;
 import spring.project.base.repository.RoleRepository;
 import spring.project.base.repository.AccountRepository;
 import spring.project.base.repository.VerificationRepository;
-import spring.project.base.service.IUserService;
+import spring.project.base.service.IAccountService;
 import spring.project.base.util.account.PasswordUtil;
 import spring.project.base.util.account.SecurityUtil;
 import spring.project.base.util.constant.Constants;
@@ -46,7 +46,7 @@ import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.*
 
 @Service
 @Transactional
-public class UserServiceImpl implements IUserService {
+public class AccountServiceImpl implements IAccountService {
 
 
     @Value("${minio.endpoint}")
@@ -64,9 +64,9 @@ public class UserServiceImpl implements IUserService {
     private final VerificationRepository verificationRepository;
 
 
-    public UserServiceImpl(AccountRepository accountRepository, MessageUtil messageUtil,
-                           RoleRepository roleRepository, PasswordEncoder encoder, EmailUtil emailUtil,
-                           VerificationRepository verificationRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, MessageUtil messageUtil,
+                              RoleRepository roleRepository, PasswordEncoder encoder, EmailUtil emailUtil,
+                              VerificationRepository verificationRepository) {
         this.accountRepository = accountRepository;
         this.messageUtil = messageUtil;
         this.roleRepository = roleRepository;

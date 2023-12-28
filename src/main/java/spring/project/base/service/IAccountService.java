@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 
 
-public interface IUserService {
+public interface IAccountService {
     UserResponse getLoginUser();
 
     Long registerAccount(RegisterAccountRequest createAccountRequest);

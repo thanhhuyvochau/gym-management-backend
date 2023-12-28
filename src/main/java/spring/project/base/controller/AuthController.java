@@ -10,7 +10,7 @@ import spring.project.base.dto.request.JwtResponse;
 import spring.project.base.dto.request.LoginRequest;
 import spring.project.base.dto.response.VerifyResponse;
 import spring.project.base.service.IAuthService;
-import spring.project.base.service.IUserService;
+import spring.project.base.service.IAccountService;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -20,9 +20,9 @@ import java.util.Objects;
 public class AuthController {
 
     private final IAuthService iAuthService;
-    private final IUserService userService;
+    private final IAccountService userService;
 
-    public AuthController(IAuthService iAuthService, IUserService userService) {
+    public AuthController(IAuthService iAuthService, IAccountService userService) {
         this.iAuthService = iAuthService;
         this.userService = userService;
     }

@@ -10,13 +10,13 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import spring.project.base.common.ApiException;
-import spring.project.base.service.IUserService;
+import spring.project.base.service.IAccountService;
 
 @Service
 public class CustomOidcUserService extends OidcUserService {
 
     @Autowired
-    private IUserService userService;
+    private IAccountService userService;
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
