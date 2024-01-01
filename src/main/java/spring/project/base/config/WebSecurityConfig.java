@@ -58,7 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UnAuthorizedUserAuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
     private AuthTokenFilter secFilter;
-    private final String[] PERMIT_ENDPOINT = {"/api/**", "/api/users/register", "/api/users/login", "/login/oauth2/**", "/api/transactions/pay/vnpay/result", "/swagger-ui/**", "/websocket/**", "/send-message/**"};
+    private final String[] PERMIT_ENDPOINT = {"/api/**", "/api/users/register", "/api/auth/login", "/login/oauth2" +
+            "/**", "/api/transactions/pay/vnpay/result", "/swagger-ui/**", "/websocket/**", "/send-message/**"};
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -142,11 +143,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeTokenResponseClient() {
-        OAuth2AccessTokenResponseHttpMessageConverter tokenResponseHttpMessageConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
+        OAuth2AccessTokenResponseHttpMessageConverter tokenResponseHttpMessageConverter =
+                new OAuth2AccessTokenResponseHttpMessageConverter();
         tokenResponseHttpMessageConverter.setTokenResponseConverter(new OAuth2AccessTokenResponseConverterWithDefaults());
-        RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(), tokenResponseHttpMessageConverter));
+        RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(),
+                tokenResponseHttpMessageConverter));
         restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-        DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+        DefaultAuthorizationCodeTokenResponseClient tokenResponseClient =
+                new DefaultAuthorizationCodeTokenResponseClient();
         tokenResponseClient.setRestOperations(restTemplate);
         return tokenResponseClient;
     }

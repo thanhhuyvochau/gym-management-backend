@@ -1,7 +1,7 @@
 package spring.project.base.entity;
 
 
-import spring.project.base.constant.EUserRole;
+import spring.project.base.constant.EAccountRole;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class Role extends BaseEntity {
 
     @Column(name = "code")
     @Enumerated(EnumType.STRING)
-    private EUserRole code;
+    private EAccountRole code;
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "role")
@@ -31,11 +31,11 @@ public class Role extends BaseEntity {
         this.id = id;
     }
 
-    public EUserRole getCode() {
+    public EAccountRole getCode() {
         return code;
     }
 
-    public void setCode(EUserRole code) {
+    public void setCode(EAccountRole code) {
         this.code = code;
     }
 

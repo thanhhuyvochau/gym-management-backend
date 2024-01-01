@@ -1,14 +1,14 @@
 package spring.project.base.dto.response;
 
 
-import spring.project.base.constant.EUserRole;
+import spring.project.base.constant.EAccountRole;
 
 public class RoleResponse {
 
     private Long id;
     private String name;
 
-    private EUserRole code;
+    private EAccountRole code;
 
     public Long getId() {
         return id;
@@ -26,11 +26,11 @@ public class RoleResponse {
         this.name = name;
     }
 
-    public EUserRole getCode() {
+    public EAccountRole getCode() {
         return code;
     }
 
-    public void setCode(EUserRole code) {
+    public void setCode(EAccountRole code) {
         this.code = code;
     }
 }

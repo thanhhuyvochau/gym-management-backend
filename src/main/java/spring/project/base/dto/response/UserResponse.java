@@ -1,13 +1,10 @@
 package spring.project.base.dto.response;
 
-
 import spring.project.base.constant.EGenderType;
 
 import java.time.Instant;
 
-
 public class UserResponse {
-    private static final long serialVersionUID = 1L;
     private Long id;
     private String fullName;
     private String email;
