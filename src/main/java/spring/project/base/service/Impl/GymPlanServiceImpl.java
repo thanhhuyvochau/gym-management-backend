@@ -7,26 +7,21 @@ import spring.project.base.dto.request.GymPlanRequest;
 import spring.project.base.dto.response.GymPlanResponse;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.GymPlan;
-import spring.project.base.repository.AccountRepository;
 import spring.project.base.repository.GymPlanRepository;
 import spring.project.base.service.IGymPlanService;
 import spring.project.base.util.account.SecurityUtil;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class GymPlanServiceImpl implements IGymPlanService {
 
     private final GymPlanRepository gymPlanRepository;
-    private final AccountRepository accountRepository;
 
-    public GymPlanServiceImpl(GymPlanRepository gymPlanRepository, AccountRepository accountRepository) {
+    public GymPlanServiceImpl(GymPlanRepository gymPlanRepository) {
         this.gymPlanRepository = gymPlanRepository;
-        this.accountRepository = accountRepository;
     }
-
 
     @Override
     public GymPlanResponse createGymPlan(GymPlanRequest requestDTO) {

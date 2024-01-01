@@ -1,7 +1,6 @@
 // GymPlanController.java
 package spring.project.base.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.project.base.dto.request.GymPlanRequest;
@@ -16,7 +15,6 @@ public class GymPlanController {
 
     private final IGymPlanService gymPlanService;
 
-    @Autowired
     public GymPlanController(IGymPlanService gymPlanService) {
         this.gymPlanService = gymPlanService;
     }
@@ -41,7 +39,7 @@ public class GymPlanController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GymPlanResponse> updateGymPlan(@PathVariable Long id,
-                                                         @RequestBody GymPlanRequest requestDTO) {
+            @RequestBody GymPlanRequest requestDTO) {
         GymPlanResponse updatedGymPlan = gymPlanService.updateGymPlan(id, requestDTO);
         return ResponseEntity.ok(updatedGymPlan);
     }
