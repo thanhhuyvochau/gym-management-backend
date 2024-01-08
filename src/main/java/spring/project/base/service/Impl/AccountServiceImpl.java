@@ -1,13 +1,16 @@
 package spring.project.base.service.Impl;
 
-import org.hibernate.annotations.common.util.impl.Log_.logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import spring.project.base.common.ApiPage;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
 import spring.project.base.config.security.oauth2.dto.SignUpRequest;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfo;
@@ -35,6 +38,7 @@ import spring.project.base.util.formater.StringUtil;
 import spring.project.base.util.formater.TimeUtil;
 import spring.project.base.util.mapper.ConvertUtil;
 import spring.project.base.util.mapper.GeneralUtils;
+import spring.project.base.util.mapper.PageUtil;
 import spring.project.base.util.message.EmailUtil;
 import spring.project.base.util.message.MessageUtil;
 import spring.project.base.util.specification.AccountSpecificationBuilder;
@@ -42,7 +46,6 @@ import spring.project.base.util.specification.AccountSpecificationBuilder;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 
 import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.*;
@@ -66,8 +69,8 @@ public class AccountServiceImpl implements IAccountService {
     private final VerificationRepository verificationRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository, MessageUtil messageUtil,
-            RoleRepository roleRepository, PasswordEncoder encoder, EmailUtil emailUtil,
-            VerificationRepository verificationRepository) {
+                              RoleRepository roleRepository, PasswordEncoder encoder, EmailUtil emailUtil,
+                              VerificationRepository verificationRepository) {
         this.accountRepository = accountRepository;
         this.messageUtil = messageUtil;
         this.roleRepository = roleRepository;
@@ -88,7 +91,7 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     public UserResponse getLoginUser() {
         Account currentLoginAccount = getCurrentLoginUser();
-        return ConvertUtil.convertUsertoUserDto(currentLoginAccount);
+        return ConvertUtil.convertUsertoUserResponse(currentLoginAccount);
     }
 
     @Override
@@ -235,7 +238,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public LocalUser processUserRegistrationOAuth2(String registrationId, Map<String, Object> attributes,
-            OidcIdToken idToken, OidcUserInfo userInfo) throws IOException {
+                                                   OidcIdToken idToken, OidcUserInfo userInfo) throws IOException {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, attributes);
         String email = (String) attributes.get("email");
         if (StringUtils.isEmpty(oAuth2UserInfo.getName())) {
@@ -307,15 +310,18 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public List<UserResponse> getUsersWithFilter(AccountFilterRequest request, EAccountRole role) {
+    public ApiPage<UserResponse> getUsersWithFilter(AccountFilterRequest request, EAccountRole role,
+                                                    Pageable pageable) {
         AccountSpecificationBuilder builder = AccountSpecificationBuilder.specificationBuilder();
         if (!request.getEmail().isEmpty()) {
             builder.searchByEmail(request.getEmail());
         } else if (!request.getFullName().isEmpty()) {
             builder.searchByName(request.getFullName());
         } else if (!request.getPhone().isEmpty()) {
-            builder.sear
+            builder.searchByPhone(request.getPhone());
         }
-        return null;
+        Specification<Account> accountSpecification = builder.build();
+        Page<Account> result = accountRepository.findAll(accountSpecification, pageable);
+        return PageUtil.convert(result.map(ConvertUtil::convertUsertoUserResponse));
     }
 }

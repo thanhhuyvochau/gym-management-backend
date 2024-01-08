@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GymManagementApplication<Bsmart>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "spring.project.base.GymManagementApplication",
+            "projectName": "Bsmart",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

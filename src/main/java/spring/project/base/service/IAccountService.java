@@ -1,7 +1,9 @@
 package spring.project.base.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import spring.project.base.common.ApiPage;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
 import spring.project.base.constant.EAccountRole;
 import spring.project.base.dto.response.UserResponse;
@@ -24,9 +26,9 @@ public interface IAccountService {
     Boolean resendVerifyEmail();
 
     LocalUser processUserRegistrationOAuth2(String registrationId, Map<String, Object> attributes,
-            OidcIdToken idToken, OidcUserInfo userInfo) throws IOException;
+                                            OidcIdToken idToken, OidcUserInfo userInfo) throws IOException;
 
     Long changePassword(ChangePasswordRequest changePasswordRequest);
 
-    List<UserResponse> getUsersWithFilter(AccountFilterRequest request, EAccountRole role);
+    ApiPage<UserResponse> getUsersWithFilter(AccountFilterRequest request, EAccountRole role, Pageable pageable);
 }

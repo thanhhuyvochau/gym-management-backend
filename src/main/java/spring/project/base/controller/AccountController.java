@@ -2,9 +2,14 @@ package spring.project.base.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import spring.project.base.common.ApiPage;
 import spring.project.base.common.ApiResponse;
+import spring.project.base.constant.EAccountRole;
+import spring.project.base.dto.request.AccountFilterRequest;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.request.ChangePasswordRequest;
 import spring.project.base.dto.request.RegisterAccountRequest;
@@ -13,11 +18,11 @@ import spring.project.base.service.IAccountService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/accounts")
+public class AccountController {
     private final IAccountService iUserService;
 
-    public UserController(IAccountService iUserService) {
+    public AccountController(IAccountService iUserService) {
         this.iUserService = iUserService;
     }
 
@@ -37,8 +42,26 @@ public class UserController {
 
 
     @PostMapping("/register")
+    @Operation(summary = "Đăng ký tài khoản")
     public ResponseEntity<ApiResponse<Long>> registerAccount(@Valid @RequestBody RegisterAccountRequest createAccountRequest) {
         return ResponseEntity.ok(ApiResponse.success(iUserService.registerAccount(createAccountRequest)));
     }
 
+    @Operation(summary = "Lấy tất cả quản lý")
+    @GetMapping("/managers")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<ApiPage<UserResponse>>> getManagerAccounts(@RequestParam(required = false) AccountFilterRequest request,
+                                                                                 Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.success(iUserService.getUsersWithFilter(request, EAccountRole.MANAGER,
+                pageable)));
+    }
+
+    @Operation(summary = "Lấy tất cả chủ phòng gym")
+    @GetMapping("gym-owners")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_GYM_OWNER')")
+    public ResponseEntity<ApiResponse<ApiPage<UserResponse>>> getGymOwnerAccounts(@RequestParam(required = false) AccountFilterRequest request,
+                                                                                  Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.success(iUserService.getUsersWithFilter(request, EAccountRole.GYM_OWNER,
+                pageable)));
+    }
 }

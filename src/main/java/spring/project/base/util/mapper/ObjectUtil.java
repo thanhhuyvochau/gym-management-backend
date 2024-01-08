@@ -41,7 +41,7 @@ public class ObjectUtil {
         BeanUtils.copyProperties(source, target);
     }
 
-    public static <T, K> K copyProperties(T source, K target, Class<K> clazz, boolean isIgnoreNullProperties) {
+    public static <T, K> K copyproperties(T source, K target, Class<K> clazz, boolean isIgnoreNullProperties) {
         if (source == null) {
             return null;
         }

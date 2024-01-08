@@ -35,7 +35,7 @@ public class SecurityUtil {
         String email = getEmailCurrentUser(principal);
         account = staticAccountRepository.findByEmail(email)
                 .orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND)
-                        .withMessage("Tài khoản đăng nhập hiện tại không tìm thấy " + email == null ? "": email));
+                        .withMessage(email == null ? "" : "Tài khoản đăng nhập hiện tại không tìm thấy " + email));
         return account;
     }
 
