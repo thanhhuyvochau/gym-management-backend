@@ -136,28 +136,28 @@ public class AccountServiceImpl implements IAccountService {
                             + createAccountRequest.getEmail());
         }
 
-        if (Boolean.TRUE.equals(accountRepository.existsAccountByPhone(createAccountRequest.getPhone()))) {
-            throw ApiException.create(HttpStatus.BAD_REQUEST)
-                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.REGISTERED_PHONE_NUMBER)
-                            + createAccountRequest.getPhone());
-        }
+//        if (Boolean.TRUE.equals(accountRepository.existsAccountByPhone(createAccountRequest.getPhone()))) {
+//            throw ApiException.create(HttpStatus.BAD_REQUEST)
+//                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.REGISTERED_PHONE_NUMBER)
+//                            + createAccountRequest.getPhone());
+//        }
         Role role = roleRepository.findRoleByCode(EAccountRole.GYM_OWNER)
                 .orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND)
                         .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.ROLE_NOT_FOUND_BY_CODE)
                                 + EAccountRole.GYM_OWNER));
-        if (!TimeUtil.isValidBirthday(createAccountRequest.getBirthDay())) {
-            throw ApiException.create(HttpStatus.BAD_REQUEST)
-                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Invalid.INVALID_BIRTH_DAY));
-        }
+//        if (!TimeUtil.isValidBirthday(createAccountRequest.getBirthDay())) {
+//            throw ApiException.create(HttpStatus.BAD_REQUEST)
+//                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Invalid.INVALID_BIRTH_DAY));
+//        }
         account.setEmail(createAccountRequest.getEmail());
         account.setPassword(encoder.encode(createAccountRequest.getPassword()));
         account.setRole(role);
-        account.setGender(createAccountRequest.getGender());
-        account.setFullName(createAccountRequest.getFullName());
-        account.setPhone(createAccountRequest.getPhone());
+//        account.setGender(createAccountRequest.getGender());
+//        account.setFullName(createAccountRequest.getFullName());
+//        account.setPhone(createAccountRequest.getPhone());
         account.setVerified(true);
         account.setStatus(true);
-        account.setAddress(createAccountRequest.getAddress());
+//        account.setAddress(createAccountRequest.getAddress());
         Account savedAccount = accountRepository.save(account);
 
         // Send verify mail
@@ -184,19 +184,19 @@ public class AccountServiceImpl implements IAccountService {
         if (!StringUtil.isValidEmailAddress(request.getEmail())) {
             throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(INVALID_EMAIL));
         }
-        if (!StringUtil.isValidVietnameseMobilePhoneNumber(request.getPhone())) {
-            throw ApiException.create(HttpStatus.BAD_REQUEST)
-                    .withMessage(messageUtil.getLocalMessage(INVALID_PHONE_NUMBER));
-        }
-        if (StringUtil.isNullOrEmpty(request.getFullName())) {
-            throw ApiException.create(HttpStatus.BAD_REQUEST)
-                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Empty.EMPTY_FULL_NAME));
-        }
-        boolean isValidGender = request.getGender().equals(EGenderType.MALE)
-                || request.getGender().equals(EGenderType.FEMALE);
-        if (!isValidGender) {
-            throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(INVALID_GENDER));
-        }
+//        if (!StringUtil.isValidVietnameseMobilePhoneNumber(request.getPhone())) {
+//            throw ApiException.create(HttpStatus.BAD_REQUEST)
+//                    .withMessage(messageUtil.getLocalMessage(INVALID_PHONE_NUMBER));
+//        }
+//        if (StringUtil.isNullOrEmpty(request.getFullName())) {
+//            throw ApiException.create(HttpStatus.BAD_REQUEST)
+//                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Empty.EMPTY_FULL_NAME));
+//        }
+//        boolean isValidGender = request.getGender().equals(EGenderType.MALE)
+//                || request.getGender().equals(EGenderType.FEMALE);
+//        if (!isValidGender) {
+//            throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(INVALID_GENDER));
+//        }
         if (!PasswordUtil.isValidPassword(request.getPassword())) {
             throw ApiException.create(HttpStatus.BAD_REQUEST)
                     .withMessage(messageUtil.getLocalMessage(INVALID_PASSWORD));
