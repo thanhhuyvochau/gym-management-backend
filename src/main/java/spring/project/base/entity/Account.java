@@ -51,4 +51,6 @@ public class Account extends BaseEntity {
     @OneToMany(mappedBy = "gymOwner", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.DETACH})
     private List<Transaction> transactions = new ArrayList<>();
+    @OneToMany(mappedBy = "gymOwner", cascade = CascadeType.ALL)
+    private List<Member> members = new ArrayList<>();
 }
