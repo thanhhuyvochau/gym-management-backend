@@ -3,6 +3,7 @@ package spring.project.base.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import spring.project.base.common.ApiResponse;
 import spring.project.base.dto.request.GymPlanRequest;
 import spring.project.base.dto.response.GymPlanResponse;
 import spring.project.base.service.IGymPlanService;
@@ -20,28 +21,28 @@ public class GymPlanController {
     }
 
     @PostMapping
-    public ResponseEntity<GymPlanResponse> createGymPlan(@RequestBody GymPlanRequest requestDTO) {
+    public ResponseEntity<ApiResponse<GymPlanResponse>> createGymPlan(@RequestBody GymPlanRequest requestDTO) {
         GymPlanResponse createdGymPlan = gymPlanService.createGymPlan(requestDTO);
-        return ResponseEntity.ok(createdGymPlan);
+        return ResponseEntity.ok(ApiResponse.success(createdGymPlan));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GymPlanResponse> getGymPlan(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<GymPlanResponse>> getGymPlan(@PathVariable Long id) {
         GymPlanResponse gymPlan = gymPlanService.getGymPlan(id);
-        return ResponseEntity.ok(gymPlan);
+        return ResponseEntity.ok(ApiResponse.success(gymPlan));
     }
 
     @GetMapping
-    public ResponseEntity<List<GymPlanResponse>> getAllGymPlans() {
+    public ResponseEntity<ApiResponse<List<GymPlanResponse>>> getAllGymPlans() {
         List<GymPlanResponse> allGymPlans = gymPlanService.getAllGymPlans();
-        return ResponseEntity.ok(allGymPlans);
+        return ResponseEntity.ok(ApiResponse.success(allGymPlans));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GymPlanResponse> updateGymPlan(@PathVariable Long id,
-            @RequestBody GymPlanRequest requestDTO) {
+    public ResponseEntity<ApiResponse<GymPlanResponse>> updateGymPlan(@PathVariable Long id,
+                                                                      @RequestBody GymPlanRequest requestDTO) {
         GymPlanResponse updatedGymPlan = gymPlanService.updateGymPlan(id, requestDTO);
-        return ResponseEntity.ok(updatedGymPlan);
+        return ResponseEntity.ok(ApiResponse.success(updatedGymPlan));
     }
 
     @DeleteMapping("/{id}")

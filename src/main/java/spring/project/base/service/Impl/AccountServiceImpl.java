@@ -16,6 +16,7 @@ import spring.project.base.config.security.oauth2.dto.SignUpRequest;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfo;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfoFactory;
 import spring.project.base.constant.EAccountRole;
+import spring.project.base.dto.request.UpdateAccountRequest;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Role;
 import spring.project.base.entity.Verification;
@@ -152,12 +153,12 @@ public class AccountServiceImpl implements IAccountService {
         account.setEmail(createAccountRequest.getEmail());
         account.setPassword(encoder.encode(createAccountRequest.getPassword()));
         account.setRole(role);
-//        account.setGender(createAccountRequest.getGender());
-//        account.setFullName(createAccountRequest.getFullName());
-//        account.setPhone(createAccountRequest.getPhone());
+        account.setGender(createAccountRequest.getGender());
+        account.setFullName(createAccountRequest.getFullName());
+        account.setPhone(createAccountRequest.getPhone());
         account.setVerified(true);
         account.setStatus(true);
-//        account.setAddress(createAccountRequest.getAddress());
+        account.setAddress(createAccountRequest.getAddress());
         Account savedAccount = accountRepository.save(account);
 
         // Send verify mail
@@ -310,8 +311,8 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public ApiPage<UserResponse> getUsersWithFilter(AccountFilterRequest request, EAccountRole role,
-                                                    Pageable pageable) {
+    public ApiPage<UserResponse> getAccountsWithFilter(AccountFilterRequest request, EAccountRole role,
+                                                       Pageable pageable) {
         AccountSpecificationBuilder builder = AccountSpecificationBuilder.specificationBuilder();
         if (!request.getEmail().isEmpty()) {
             builder.searchByEmail(request.getEmail());
@@ -323,5 +324,24 @@ public class AccountServiceImpl implements IAccountService {
         Specification<Account> accountSpecification = builder.build();
         Page<Account> result = accountRepository.findAll(accountSpecification, pageable);
         return PageUtil.convert(result.map(ConvertUtil::convertUsertoUserResponse));
+    }
+
+    @Override
+    public UserResponse updateAccountProfile(UpdateAccountRequest request) {
+        Account currentUser = SecurityUtil.getCurrentUser();
+        if (request.getFullName() != null && !request.getFullName().isEmpty()) {
+            currentUser.setFullName(request.getFullName());
+        }
+        if (request.getGender() != null) {
+            currentUser.setGender(request.getGender());
+        }
+        if (request.getAddress() != null && !request.getAddress().isEmpty()) {
+            currentUser.setAddress(request.getAddress());
+        }
+        if (request.getPhone() != null && !request.getPhone().isEmpty()) {
+            currentUser.setPhone(request.getPhone());
+        }
+        accountRepository.save(currentUser);
+        return ConvertUtil.convertUsertoUserResponse(currentUser);
     }
 }

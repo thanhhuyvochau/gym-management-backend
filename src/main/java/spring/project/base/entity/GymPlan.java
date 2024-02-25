@@ -6,6 +6,8 @@ import spring.project.base.constant.TimeUnit;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -30,4 +32,6 @@ public class GymPlan extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "gym_owner_id")
     private Account gymOwner;
+    @OneToMany(mappedBy = "gymPlan", cascade = CascadeType.ALL)
+    private List<GymPlanRegister> registerList = new ArrayList<>();
 }

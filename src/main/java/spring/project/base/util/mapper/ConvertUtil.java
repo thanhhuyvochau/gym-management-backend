@@ -42,7 +42,7 @@ public class ConvertUtil {
     public static UserResponse convertUsertoUserResponse(Account account) {
         UserResponse userResponse = ObjectUtil.copyproperties(account, new UserResponse(), UserResponse.class, true);
         RoleResponse roleResponse = ConvertUtil.convertRoleToRoleDto(account.getRole());
-        userResponse.setRoleDto(roleResponse);
+        userResponse.setRoleResponse(roleResponse);
         return userResponse;
     }
 

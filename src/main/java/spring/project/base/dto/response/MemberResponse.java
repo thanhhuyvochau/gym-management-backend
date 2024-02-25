@@ -3,8 +3,8 @@ package spring.project.base.dto.response;
 import lombok.Data;
 import spring.project.base.constant.EGenderType;
 
-import javax.persistence.Entity;
 import java.time.LocalDateTime;
+
 @Data
 public class MemberResponse {
     private long id;

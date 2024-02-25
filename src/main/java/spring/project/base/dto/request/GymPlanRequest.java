@@ -17,7 +17,6 @@ public class GymPlanRequest {
     private TimeUnit timeUnit;
     private BigDecimal price;
     private Boolean activate;
-    private Long gymOwnerId;
 
     public static GymPlan mapToEntity(GymPlanRequest requestDTO, Account gymOwner) {
         GymPlan gymPlan = ObjectUtil.copyProperties(requestDTO, new GymPlan(), GymPlan.class);

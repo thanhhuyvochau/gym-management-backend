@@ -7,17 +7,9 @@ import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Data
-public class RegisterAccountRequest {
-    @NotNull
+public class UpdateAccountRequest {
     private String fullName;
-    @NotNull
-    private String email;
-    @NotNull
     private String phone;
-    @NotNull
-    private String password;
-    @NotNull
     private EGenderType gender;
-    @NotNull
     private String address;
 }

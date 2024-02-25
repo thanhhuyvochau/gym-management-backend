@@ -34,7 +34,7 @@ public class SecurityUtil {
         Account account = null;
         String email = getEmailCurrentUser(principal);
         account = staticAccountRepository.findByEmail(email)
-                .orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND)
+                .orElseThrow(() -> ApiException.create(HttpStatus.UNAUTHORIZED)
                         .withMessage(email == null ? "" : "Tài khoản đăng nhập hiện tại không tìm thấy " + email));
         return account;
     }
@@ -45,7 +45,7 @@ public class SecurityUtil {
         Account account = null;
         String email = getEmailCurrentUser(principal);
         account = staticAccountRepository.findByEmail(email)
-                .orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND)
+                .orElseThrow(() -> ApiException.create(HttpStatus.UNAUTHORIZED)
                         .withMessage("Tài khoản đăng nhập hiện tại không tìm thấy " + email == null ? "" : email));
         return Optional.ofNullable(account);
     }

@@ -10,6 +10,7 @@ import spring.project.base.common.ApiPage;
 import spring.project.base.common.ApiResponse;
 import spring.project.base.constant.EAccountRole;
 import spring.project.base.dto.request.AccountFilterRequest;
+import spring.project.base.dto.request.UpdateAccountRequest;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.request.ChangePasswordRequest;
 import spring.project.base.dto.request.RegisterAccountRequest;
@@ -52,16 +53,23 @@ public class AccountController {
     @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
     public ResponseEntity<ApiResponse<ApiPage<UserResponse>>> getManagerAccounts(@RequestParam(required = false) AccountFilterRequest request,
                                                                                  Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.success(iUserService.getUsersWithFilter(request, EAccountRole.MANAGER,
+        return ResponseEntity.ok(ApiResponse.success(iUserService.getAccountsWithFilter(request, EAccountRole.MANAGER,
                 pageable)));
     }
 
     @Operation(summary = "Lấy tất cả chủ phòng gym")
-    @GetMapping("gym-owners")
+    @GetMapping("/gym-owners")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_GYM_OWNER')")
     public ResponseEntity<ApiResponse<ApiPage<UserResponse>>> getGymOwnerAccounts(@RequestParam(required = false) AccountFilterRequest request,
                                                                                   Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.success(iUserService.getUsersWithFilter(request, EAccountRole.GYM_OWNER,
+        return ResponseEntity.ok(ApiResponse.success(iUserService.getAccountsWithFilter(request, EAccountRole.GYM_OWNER,
                 pageable)));
+    }
+
+    @Operation(summary = "Cập nhật hồ sơ người dùng")
+    @PutMapping("/profile")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER','ROLE_GYM_OWNER')")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUserProfile(@RequestBody UpdateAccountRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(iUserService.updateAccountProfile(request)));
     }
 }
