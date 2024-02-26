@@ -1,18 +1,58 @@
-version: "3"
+version: "3.8"
 
 services:
-  # -------------------minio -------------------#
+  # Minio Service
   minio:
     env_file: ./.env
     command: server /data --console-address ":9001"
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
     image: quay.io/minio/minio:latest
-    container_name: minio_server
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
       - ./data/minio:/data
     restart: always
+    networks:
+      - app
+
+  # MySQL Service
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    command: --init-file /data/application/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=temp
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-test:/var/lib/mysql
+      - ./mysql-init-scripts/init.sql:/data/application/init.sql
+    networks:
+      - app
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
+
+  # Spring Boot Service
+  app-gmp:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - mysqldb
+    env_file: ./.env
+    restart: on-failure
+    ports:
+      - "8083:8080"
+    networks:
+      - app
+
+volumes:
+  db-test:
+
+networks:
+  app:

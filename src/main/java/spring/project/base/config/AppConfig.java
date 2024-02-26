@@ -35,21 +35,6 @@ public class AppConfig {
     }
 
     @Bean
-    public ArrayList<String> offensiveWord() {
-        String offensiveWordString = ResourceReader.readFileToString("offensive-word.txt");
-        String[] elements = offensiveWordString.split(",");
-        ArrayList<String> offensiveWords = new ArrayList<>();
-        for (String element : elements) {
-            String trimmedElement = element.trim();
-            if (trimmedElement.startsWith("'") && trimmedElement.endsWith("'")) {
-                offensiveWords.add(trimmedElement.substring(1, trimmedElement.length() - 1));
-            }
-        }
-        System.out.println("Generate offensive word list success, total element: " + offensiveWords.size());
-        return offensiveWords;
-    }
-
-    @Bean
     @Primary
     public ObjectMapper objectMapper() {
 

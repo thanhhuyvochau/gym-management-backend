@@ -1,43 +1,46 @@
 server:
   forward-headers-strategy: framework
+
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/temp
+    url: jdbc:mysql://mysqldb/temp?useSSL=false
     username: root
     password: 123456789
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    show-sql: 'true'
+    show-sql: true
     hibernate:
       ddl-auto: update
+
   servlet:
     multipart:
-      enabled: 'true'
+      enabled: true
       max-request-size: 30MB
       file-size-threshold: 3KB
       max-file-size: 30MB
-#------------------Security Specific Properties-------
+
+# Security Specific Properties
 app:
   secret-key: J@!gt*K
   oauth2-redirect: https://mismart.vercel.app/login-success
+
 beholder:
   app:
-    jwtSecret:
-      bezKoderSecretKey
-    jwtExpirationMs:
-      86400000
-
+    jwtSecret: bezKoderSecretKey
+    jwtExpirationMs: 86400000
 
 logging:
   file:
     path: /logs
     name: /logs/application.log
 
-
-
-
+minio:
+  access:
+    key: fIe5b1RXYwm9qBq6pJ9h
+    secret: 84btAoUuOZYS9DCCJUrk0RPYAf2G77s4FBV2xnOK
+  url: http://localhost:9001
+  bucket:
+    name: gmp
+  endpoint: http://localhost:9001
