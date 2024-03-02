@@ -1,7 +1,6 @@
 package spring.project.base.util.specification;
 
 import org.springframework.data.jpa.domain.Specification;
-
 import spring.project.base.constant.EAccountRole;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Account_;
@@ -12,7 +11,6 @@ import spring.project.base.util.other.SpecificationUtil;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

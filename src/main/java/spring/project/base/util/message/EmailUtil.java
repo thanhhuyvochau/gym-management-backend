@@ -8,9 +8,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import spring.project.base.common.ApiException;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Verification;
-import spring.project.base.common.ApiException;
 import spring.project.base.repository.VerificationRepository;
 
 import javax.mail.internet.MimeMessage;

@@ -1,10 +1,8 @@
 package spring.project.base.entity;
 
 import lombok.Data;
-import spring.project.base.constant.EGenderType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -3,9 +3,9 @@ package spring.project.base.util.mapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
 import spring.project.base.config.security.oauth2.dto.UserInfo;
+import spring.project.base.constant.SocialProvider;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Role;
-import spring.project.base.constant.SocialProvider;
 
 import java.util.ArrayList;
 import java.util.List;

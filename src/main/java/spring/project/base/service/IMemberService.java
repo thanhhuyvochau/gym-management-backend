@@ -7,8 +7,6 @@ import spring.project.base.dto.request.RegisterGymPlanRequest;
 import spring.project.base.dto.request.UpdateMemberRequest;
 import spring.project.base.dto.response.MemberResponse;
 
-import java.util.List;
-
 public interface IMemberService {
     ApiPage<MemberResponse> getAllMembers(Pageable pageable, String q);
 

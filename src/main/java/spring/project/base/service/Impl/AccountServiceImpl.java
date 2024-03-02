@@ -10,26 +10,25 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
 import spring.project.base.config.security.oauth2.dto.SignUpRequest;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfo;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfoFactory;
 import spring.project.base.constant.EAccountRole;
-import spring.project.base.dto.request.UpdateAccountRequest;
-import spring.project.base.entity.Account;
-import spring.project.base.entity.Role;
-import spring.project.base.entity.Verification;
-import spring.project.base.common.ApiException;
-import spring.project.base.constant.EGenderType;
 import spring.project.base.constant.EVerifyStatus;
-import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.request.AccountFilterRequest;
 import spring.project.base.dto.request.ChangePasswordRequest;
 import spring.project.base.dto.request.RegisterAccountRequest;
+import spring.project.base.dto.request.UpdateAccountRequest;
+import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.response.VerifyResponse;
-import spring.project.base.repository.RoleRepository;
+import spring.project.base.entity.Account;
+import spring.project.base.entity.Role;
+import spring.project.base.entity.Verification;
 import spring.project.base.repository.AccountRepository;
+import spring.project.base.repository.RoleRepository;
 import spring.project.base.repository.VerificationRepository;
 import spring.project.base.service.IAccountService;
 import spring.project.base.util.account.PasswordUtil;
@@ -49,7 +48,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
 
-import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.*;
+import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.INVALID_EMAIL;
+import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.INVALID_PASSWORD;
 
 @Service
 @Transactional

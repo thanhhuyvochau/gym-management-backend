@@ -1,8 +1,8 @@
 package spring.project.base.dto.response;
 
+import spring.project.base.constant.ENotificationEntity;
 import spring.project.base.constant.ENotificationType;
 import spring.project.base.entity.BaseEntity;
-import spring.project.base.constant.ENotificationEntity;
 
 public class ResponseMessage extends BaseEntity {
     private Long id;

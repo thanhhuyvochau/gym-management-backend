@@ -4,8 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity

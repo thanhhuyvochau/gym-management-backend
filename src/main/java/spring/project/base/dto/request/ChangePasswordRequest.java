@@ -1,7 +1,6 @@
 package spring.project.base.dto.request;
 
 import lombok.Data;
-import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

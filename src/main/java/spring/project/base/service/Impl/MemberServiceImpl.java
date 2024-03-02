@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
@@ -19,13 +18,11 @@ import spring.project.base.entity.Member;
 import spring.project.base.repository.MemberRepository;
 import spring.project.base.service.IMemberService;
 import spring.project.base.util.account.SecurityUtil;
-import spring.project.base.util.mapper.ConvertUtil;
 import spring.project.base.util.mapper.PageUtil;
 import spring.project.base.util.other.EncryptionUtils;
 import spring.project.base.validator.MemberValidator;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @Transactional

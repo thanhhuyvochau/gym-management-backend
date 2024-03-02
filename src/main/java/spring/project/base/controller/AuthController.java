@@ -9,8 +9,8 @@ import spring.project.base.constant.EVerifyStatus;
 import spring.project.base.dto.request.JwtResponse;
 import spring.project.base.dto.request.LoginRequest;
 import spring.project.base.dto.response.VerifyResponse;
-import spring.project.base.service.IAuthService;
 import spring.project.base.service.IAccountService;
+import spring.project.base.service.IAuthService;
 
 import javax.validation.Valid;
 import java.util.Objects;

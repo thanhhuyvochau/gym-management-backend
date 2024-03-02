@@ -3,13 +3,12 @@ package spring.project.base.util.mapper;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import spring.project.base.dto.response.VnPayResponse;
-import spring.project.base.entity.Account;
-import spring.project.base.entity.AppPlan;
-import spring.project.base.entity.Role;
+import spring.project.base.dto.request.UpdateEquipmentRequest;
+import spring.project.base.dto.response.EquipmentResponse;
 import spring.project.base.dto.response.RoleResponse;
 import spring.project.base.dto.response.UserResponse;
-import spring.project.base.entity.Transaction;
+import spring.project.base.dto.response.VnPayResponse;
+import spring.project.base.entity.*;
 import spring.project.base.payment.PaymentResponse;
 import spring.project.base.util.message.MessageUtil;
 
@@ -54,5 +53,13 @@ public class ConvertUtil {
         paymentResponse.setDescription(appPlan.getName());
         paymentResponse.setAmount(appPlan.getPrice());
         return paymentResponse;
+    }
+
+    public static EquipmentResponse convertEquipmentToResponse(Equipment equipment) {
+        return ObjectUtil.copyproperties(equipment, new EquipmentResponse(), EquipmentResponse.class, true);
+    }
+
+    public static Equipment convertEquipmentRequestToEntity(UpdateEquipmentRequest updateEquipmentRequest) {
+        return ObjectUtil.copyproperties(updateEquipmentRequest, new Equipment(), Equipment.class, true);
     }
 }

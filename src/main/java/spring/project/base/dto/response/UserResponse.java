@@ -2,8 +2,6 @@ package spring.project.base.dto.response;
 
 import lombok.Data;
 import spring.project.base.constant.EGenderType;
-
-import java.time.Instant;
 @Data
 public class UserResponse {
     private Long id;

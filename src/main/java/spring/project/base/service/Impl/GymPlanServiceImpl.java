@@ -2,7 +2,6 @@
 package spring.project.base.service.Impl;
 
 import org.springframework.stereotype.Service;
-
 import spring.project.base.dto.request.GymPlanRequest;
 import spring.project.base.dto.response.GymPlanResponse;
 import spring.project.base.entity.Account;
