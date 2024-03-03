@@ -3,6 +3,7 @@ package spring.project.base.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -20,4 +21,5 @@ public class GymPlanRegister {
     private GymPlan gymPlan;
     private Instant fromDate;
     private Instant toDate;
+    private BigDecimal actualPrice = BigDecimal.ZERO;
 }

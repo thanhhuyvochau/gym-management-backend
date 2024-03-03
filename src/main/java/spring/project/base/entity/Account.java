@@ -42,6 +42,8 @@ public class Account extends BaseEntity {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private EGenderType gender;
+    @Column(name = "image_profile")
+    private String imageProfile;
     @OneToMany(mappedBy = "gymOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<GymPlan> gymPlans = new ArrayList<>();
     @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

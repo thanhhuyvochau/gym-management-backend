@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import spring.project.base.common.ApiPage;
 import spring.project.base.common.ApiResponse;
+import spring.project.base.dto.request.AddMemberRequest;
+import spring.project.base.dto.request.RegisterGymPlanRequest;
 import spring.project.base.dto.request.UpdateMemberRequest;
 import spring.project.base.dto.response.MemberResponse;
 import spring.project.base.service.IMemberService;
@@ -23,14 +26,14 @@ public class MemberController {
 
     @Operation(summary = "Thêm mới thành viên")
     @PostMapping
-    public ResponseEntity<ApiResponse<Boolean>> addNewMember(@ModelAttribute UpdateMemberRequest request) throws JsonProcessingException {
+    public ResponseEntity<ApiResponse<Boolean>> addNewMember(@ModelAttribute AddMemberRequest request) throws JsonProcessingException {
         boolean result = memberService.addMember(request);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @Operation(summary = "Lấy tất cả thành viên của chủ phòng gym")
     @GetMapping
-    public ResponseEntity<ApiResponse<ApiPage<MemberResponse>>> getMembers(Pageable pageable, @RequestParam String q) throws JsonProcessingException {
+    public ResponseEntity<ApiResponse<ApiPage<MemberResponse>>> getMembers(Pageable pageable, @Nullable @RequestParam String q) throws JsonProcessingException {
         return ResponseEntity.ok(ApiResponse.success(memberService.getAllMembers(pageable, q)));
     }
 
@@ -47,9 +50,9 @@ public class MemberController {
         return ResponseEntity.ok(ApiResponse.success(memberService.deleteMemberById(id)));
     }
 
-//    @Operation(summary = "Gia hạn thành viên")
-//    @PutMapping("/{id}/extends-plan")
-//    public ResponseEntity<ApiResponse<Boolean>> extendGymPlan(@PathVariable("id") Long memberId) {
-//        return ResponseEntity.ok(ApiResponse.success(memberService.deleteMemberById(id)));
-//    }
+    @Operation(summary = "Gia hạn thành viên")
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<ApiResponse<Boolean>> extendGymPlan(@PathVariable("id") Long id, @RequestBody RegisterGymPlanRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(memberService.extendMemberPlan(id, request)));
+    }
 }

@@ -18,8 +18,6 @@ public class Member {
     private Account gymOwner;
     @Column(name = "encoded_member_data")
     private String encodeMemberData = "";
-    @Column(name = "image")
-    private String image = "";
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<GymPlanRegister> registerList = new ArrayList<>();
 }

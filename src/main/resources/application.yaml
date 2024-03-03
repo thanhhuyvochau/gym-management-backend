@@ -79,10 +79,10 @@ minio:
   access:
     key: fIe5b1RXYwm9qBq6pJ9h
     secret: 84btAoUuOZYS9DCCJUrk0RPYAf2G77s4FBV2xnOK
-  url: http://localhost:9001
+  url: http://localhost:9000
   bucket:
     name: gmp
-  endpoint: http://localhost:9001
+  endpoint: http://localhost:9000
 
 icon:
   success: http://103.173.155.221:9000/bsmart/checked.png
