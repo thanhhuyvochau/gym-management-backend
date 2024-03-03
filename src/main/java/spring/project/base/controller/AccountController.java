@@ -17,6 +17,7 @@ import spring.project.base.dto.response.UserResponse;
 import spring.project.base.service.IAccountService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -69,7 +70,7 @@ public class AccountController {
     @Operation(summary = "Cập nhật hồ sơ người dùng")
     @PutMapping("/profile")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER','ROLE_GYM_OWNER')")
-    public ResponseEntity<ApiResponse<UserResponse>> updateUserProfile(@RequestBody UpdateAccountRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> updateUserProfile(@ModelAttribute UpdateAccountRequest request) throws IOException {
         return ResponseEntity.ok(ApiResponse.success(iUserService.updateAccountProfile(request)));
     }
 }

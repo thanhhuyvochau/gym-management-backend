@@ -32,5 +32,5 @@ public interface IAccountService {
 
     ApiPage<UserResponse> getAccountsWithFilter(AccountFilterRequest request, EAccountRole role, Pageable pageable);
 
-    UserResponse updateAccountProfile(UpdateAccountRequest request);
+    UserResponse updateAccountProfile(UpdateAccountRequest request) throws IOException;
 }

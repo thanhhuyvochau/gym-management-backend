@@ -1,5 +1,6 @@
 package spring.project.base.service.Impl;
 
+import io.minio.ObjectWriteResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
@@ -33,7 +35,9 @@ import spring.project.base.repository.VerificationRepository;
 import spring.project.base.service.IAccountService;
 import spring.project.base.util.account.PasswordUtil;
 import spring.project.base.util.account.SecurityUtil;
+import spring.project.base.util.adapter.MinioAdapter;
 import spring.project.base.util.constant.Constants;
+import spring.project.base.util.formater.MiniIOUtil;
 import spring.project.base.util.formater.StringUtil;
 import spring.project.base.util.formater.TimeUtil;
 import spring.project.base.util.mapper.ConvertUtil;
@@ -68,16 +72,18 @@ public class AccountServiceImpl implements IAccountService {
     private final EmailUtil emailUtil;
 
     private final VerificationRepository verificationRepository;
+    private final MinioAdapter minioAdapter;
 
     public AccountServiceImpl(AccountRepository accountRepository, MessageUtil messageUtil,
                               RoleRepository roleRepository, PasswordEncoder encoder, EmailUtil emailUtil,
-                              VerificationRepository verificationRepository) {
+                              VerificationRepository verificationRepository, MinioAdapter minioAdapter) {
         this.accountRepository = accountRepository;
         this.messageUtil = messageUtil;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.emailUtil = emailUtil;
         this.verificationRepository = verificationRepository;
+        this.minioAdapter = minioAdapter;
     }
 
     private Account findUserById(Long id) {
@@ -327,7 +333,7 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     @Override
-    public UserResponse updateAccountProfile(UpdateAccountRequest request) {
+    public UserResponse updateAccountProfile(UpdateAccountRequest request) throws IOException {
         Account currentUser = SecurityUtil.getCurrentUser();
         if (request.getFullName() != null && !request.getFullName().isEmpty()) {
             currentUser.setFullName(request.getFullName());
@@ -341,6 +347,15 @@ public class AccountServiceImpl implements IAccountService {
         if (request.getPhone() != null && !request.getPhone().isEmpty()) {
             currentUser.setPhone(request.getPhone());
         }
+
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            MultipartFile file = request.getImage();
+            String name = request.getFullName() + "_" + Instant.now().toString();
+            ObjectWriteResponse objectWriteResponse = minioAdapter.uploadFile(name, file.getContentType(), file.getInputStream(), file.getSize());
+            String imageURL = MiniIOUtil.buildUrl(minioUrl, objectWriteResponse);
+            currentUser.setImageProfile(imageURL);
+        }
+
         accountRepository.save(currentUser);
         return ConvertUtil.convertUsertoUserResponse(currentUser);
     }
