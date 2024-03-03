@@ -25,7 +25,7 @@ public class EquipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<EquipmentResponse>> addEquipment(@Valid @RequestBody UpdateEquipmentRequest equipment) {
+    public ResponseEntity<ApiResponse<EquipmentResponse>> addEquipment(@Valid @ModelAttribute UpdateEquipmentRequest equipment) {
         // Validation will be automatically triggered due to @Valid annotation
         return ResponseEntity.ok(ApiResponse.success(equipmentService.saveEquipment(equipment)));
     }
@@ -43,6 +43,12 @@ public class EquipmentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Boolean>> deleteEquipment(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(equipmentService.deleteEquipment(id)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<EquipmentResponse>> editEquipment(@PathVariable Long id, @Valid @ModelAttribute UpdateEquipmentRequest equipment) {
+        // Validation will be automatically triggered due to @Valid annotation
+        return ResponseEntity.ok(ApiResponse.success(equipmentService.editEquipment(id, equipment)));
     }
 
     // Other CRUD operations as needed

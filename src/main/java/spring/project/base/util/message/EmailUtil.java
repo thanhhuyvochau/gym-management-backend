@@ -1,5 +1,7 @@
 package spring.project.base.util.message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,12 +31,13 @@ public class EmailUtil {
     private String resetPasswordTemplate;
     private final JavaMailSender mailSender;
     private final VerificationRepository verificationRepository;
-    private final String SEND_FROM = "noreply@bsmart.gmail";
+    private final String SEND_FROM = "noreply@gymstamina.gmail";
     @Value("${host.url}")
     private String hostURL;
     @Value("${forgot-password.url}")
     private String returnUrl;
     private final MessageUtil messageUtil;
+    private static final Logger log = LoggerFactory.getLogger(EmailUtil.class);
 
     public EmailUtil(JavaMailSender mailSender, VerificationRepository verificationRepository,
                      MessageUtil messageUtil) {
@@ -45,7 +48,7 @@ public class EmailUtil {
 
     public void sendVerifyEmailTo(Account account) {
         try {
-            String subject = "Verify BSmart Account";
+            String subject = "Verify Account";
             String verifyCode = String.valueOf(UUID.randomUUID());
             String activeLink = hostURL + verifyCode;
             Verification.Builder builder = Verification.Builder.getBuilder();
@@ -53,7 +56,7 @@ public class EmailUtil {
             sendHtmlEmail(String.format(verifyAccountTemplate, activeLink), account.getEmail(), SEND_FROM, subject);
             verificationRepository.save(verification);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw ApiException.create(HttpStatus.INTERNAL_SERVER_ERROR).withMessage("Gửi mail xác thực thất bại!");
         }
     }
@@ -68,7 +71,7 @@ public class EmailUtil {
             mailSender.send(message);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw ApiException.create(HttpStatus.INTERNAL_SERVER_ERROR).withMessage(messageUtil.getLocalMessage("Your Sending Email Message Exception"));
         }
     }
@@ -85,7 +88,7 @@ public class EmailUtil {
             mailSender.send(message);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw ApiException.create(HttpStatus.INTERNAL_SERVER_ERROR).withMessage("Your Sending Email Message Exception");
         }
     }

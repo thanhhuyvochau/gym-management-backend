@@ -1,6 +1,8 @@
 package spring.project.base.dto.request;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -17,4 +19,6 @@ public class UpdateEquipmentRequest {
     private BigDecimal costPer = BigDecimal.ZERO;
     @NotNull
     private int quantity = 0;
+    @Nullable
+    private MultipartFile image;
 }

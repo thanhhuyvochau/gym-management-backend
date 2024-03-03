@@ -25,4 +25,5 @@ public class Equipment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "gym_owner_id")
     private Account gymOwner;
+    private String image;
 }

@@ -14,4 +14,7 @@ public interface IEquipmentService {
     ApiPage<EquipmentResponse> getAllEquipment(Pageable pageable);
 
     boolean deleteEquipment(Long id);
+
+    EquipmentResponse editEquipment(Long id, UpdateEquipmentRequest equipment);
+
 }
