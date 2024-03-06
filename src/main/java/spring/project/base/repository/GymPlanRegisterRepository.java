@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface GymPlanRegisterRepository extends JpaRepository<GymPlanRegister, Long> {
     GymPlanRegister findByMemberAndToDateAfter(Member member, Instant now);
+
+    List<GymPlanRegister> findByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqual(Instant fromDate, Instant toDate);
 }

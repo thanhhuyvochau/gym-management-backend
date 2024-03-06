@@ -14,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
 import spring.project.base.dto.other.MemberData;
-import spring.project.base.dto.request.AddMemberRequest;
-import spring.project.base.dto.request.RegisterGymPlanRequest;
-import spring.project.base.dto.request.UpdateMemberRequest;
+import spring.project.base.dto.request.*;
 import spring.project.base.dto.response.MemberResponse;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.GymPlan;
@@ -235,4 +233,6 @@ public class MemberServiceImpl implements IMemberService {
         }
         return firstGymPlanRegister;
     }
+
+
 }

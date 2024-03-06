@@ -1,15 +1,17 @@
 package spring.project.base.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "gym_plan_register")
-public class GymPlanRegister {
+public class GymPlanRegister extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

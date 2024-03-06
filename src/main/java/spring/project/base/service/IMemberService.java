@@ -3,10 +3,10 @@ package spring.project.base.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.data.domain.Pageable;
 import spring.project.base.common.ApiPage;
-import spring.project.base.dto.request.AddMemberRequest;
-import spring.project.base.dto.request.RegisterGymPlanRequest;
-import spring.project.base.dto.request.UpdateMemberRequest;
+import spring.project.base.dto.request.*;
 import spring.project.base.dto.response.MemberResponse;
+
+import java.util.List;
 
 public interface IMemberService {
     ApiPage<MemberResponse> getAllMembers(Pageable pageable, String q);
@@ -20,4 +20,5 @@ public interface IMemberService {
     Boolean deleteMemberById(Long id);
 
     boolean extendMemberPlan(Long memberId, RegisterGymPlanRequest request);
+
 }

@@ -1,5 +1,10 @@
 package spring.project.base.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class GenderResponse {
     private String code;
     private String name;
