@@ -73,4 +73,18 @@ public class TimeUtil {
         return Math.abs(differenceInHour) < duration;
     }
 
+    public static ZonedDateTime toFirstDayOfMonth(Instant instant) {
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        int year = zonedDateTime.getYear();
+        int month = zonedDateTime.getMonthValue();
+        return ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZoneId.systemDefault());
+    }
+
+    public static ZonedDateTime toLastDayOfMonth(Instant instant) {
+        ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
+        int year = zonedDateTime.getYear();
+        int month = zonedDateTime.getMonthValue();
+        int lastDayOfMonth = LocalDate.of(year, month, 1).lengthOfMonth();
+        return ZonedDateTime.of(year, month, lastDayOfMonth, 23, 59, 59, 999999999, ZoneId.systemDefault());
+    }
 }

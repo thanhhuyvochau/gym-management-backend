@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
 import spring.project.base.dto.other.MemberData;
-import spring.project.base.dto.request.*;
+import spring.project.base.dto.request.AddMemberRequest;
+import spring.project.base.dto.request.RegisterGymPlanRequest;
+import spring.project.base.dto.request.UpdateMemberRequest;
 import spring.project.base.dto.response.MemberResponse;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.GymPlan;
@@ -30,6 +32,7 @@ import spring.project.base.util.formater.MiniIOUtil;
 import spring.project.base.util.mapper.PageUtil;
 import spring.project.base.util.other.EncryptionUtils;
 import spring.project.base.util.other.GymPlanUtil;
+import spring.project.base.validator.GymPlanValidator;
 import spring.project.base.validator.MemberValidator;
 
 import javax.transaction.Transactional;
@@ -101,8 +104,10 @@ public class MemberServiceImpl implements IMemberService {
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
             memberRepository.save(member);
 
-            // Register plan part while adding new member
-            regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice());
+            Long gymPlanId = request.getGymPlanId();
+            GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
+                    .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
+            regisGymPlan(member, gymPlanId, request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
@@ -137,8 +142,9 @@ public class MemberServiceImpl implements IMemberService {
 
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
             memberRepository.save(member);
-
-            regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice());
+            GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
+                    .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
+            regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
@@ -186,18 +192,21 @@ public class MemberServiceImpl implements IMemberService {
         if (!MemberValidator.isGymOwnerOfMember(gymOwner, member)) {
             throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Gym owner can not edits this member!");
         }
-        regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice());
+        GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
+                .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
+        regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
         return true;
     }
 
-    private void regisGymPlan(Member member, Long gymPlanId, Instant fromDate, BigDecimal actualPrice) {
+    private void regisGymPlan(Member member, Long gymPlanId, Instant fromDate, BigDecimal actualPrice, Account gymOwner, GymPlan gymPlan) {
         if (gymPlanId != null && fromDate != null) {
             Instant currentActiveGymPlanToDate = this.getCurrentActiveGymPlanExpiredDate(member);
             if (currentActiveGymPlanToDate != null && currentActiveGymPlanToDate.isAfter(fromDate)) {
                 throw ApiException.create(HttpStatus.PRECONDITION_FAILED).withMessage("From date should after expired date of current active plan:" + currentActiveGymPlanToDate);
+            } else if (!GymPlanValidator.isGymOwnerOfGymPlan(gymOwner, gymPlan)) {
+                throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Gym owner dont own this plan, Please try again!!");
             }
-            GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
-                    .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
+
             GymPlanRegister gymPlanRegister = new GymPlanRegister();
             gymPlanRegister.setMember(member);
             gymPlanRegister.setActualPrice(actualPrice == null ? gymPlan.getPrice() : actualPrice);

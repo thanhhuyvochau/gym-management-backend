@@ -4,7 +4,6 @@ import lombok.Data;
 import spring.project.base.constant.EGenderType;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 public class MemberResponse {
