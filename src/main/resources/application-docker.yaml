@@ -43,4 +43,4 @@ minio:
   url: minio
   bucket:
     name: gmp
-  endpoint: minio
+  endpoint: http://localhost:9000
