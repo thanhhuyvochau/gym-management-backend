@@ -3,6 +3,8 @@ package spring.project.base.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import spring.project.base.constant.EGenderType;
 import spring.project.base.constant.SocialProvider;
 
@@ -13,7 +15,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "account")
-@Data
+@Getter
+@Setter
 public class Account extends BaseEntity {
     private static final long serialVersionUID = 1L;
     @Id

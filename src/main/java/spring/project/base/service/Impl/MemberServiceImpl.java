@@ -104,10 +104,12 @@ public class MemberServiceImpl implements IMemberService {
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
             memberRepository.save(member);
 
-            Long gymPlanId = request.getGymPlanId();
-            GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
-                    .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
-            regisGymPlan(member, gymPlanId, request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+            if (request.getGymPlanId() != null) {
+                Long gymPlanId = request.getGymPlanId();
+                GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
+                        .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
+                regisGymPlan(member, gymPlanId, request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
@@ -142,9 +144,11 @@ public class MemberServiceImpl implements IMemberService {
 
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
             memberRepository.save(member);
-            GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
-                    .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
-            regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+            if(request.getGymPlanId() != null){
+                GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
+                        .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
+                regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
