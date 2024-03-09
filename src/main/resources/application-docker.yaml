@@ -40,7 +40,7 @@ minio:
   access:
     key: fIe5b1RXYwm9qBq6pJ9h
     secret: 84btAoUuOZYS9DCCJUrk0RPYAf2G77s4FBV2xnOK
-  url: minio
+  url: ${MINIO_URL:http://127.0.0.1:9000}
   bucket:
     name: gmp
   endpoint: http://localhost:9000
