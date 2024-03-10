@@ -24,12 +24,12 @@ public class AppConfig {
 
     @Bean
     public String verifyAccountTemplate() {
-        return ResourceReader.readFileToString("verify-account.txt");
+        return ResourceReader.readFileToString("verify-account.html");
     }
 
     @Bean
     public String resetPasswordTemplate() {
-        return ResourceReader.readFileToString("reset-password.txt");
+        return ResourceReader.readFileToString("reset-password.html");
     }
 
     @Bean

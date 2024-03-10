@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Notification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .notification-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin: 0;
+        }
+
+        p {
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container">
+        <h2>Thông Báo OTP</h2>
+
+        <p>Mã OTP Xác Thực Của Bạn Là</p>
+        <h3 id="otpCode"></h3>
+    </div>
+
+    <script>
+        const otpCode = "${otpCode}";
+
+        // Display the OTP code on the page
+        document.getElementById('otpCode').innerText = otpCode;
+    </script>
+</body>
+</html>

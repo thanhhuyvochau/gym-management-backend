@@ -11,6 +11,7 @@ import spring.project.base.common.ApiResponse;
 import spring.project.base.dto.request.SaleReportRequest;
 import spring.project.base.dto.request.SaleReportResponse;
 import spring.project.base.dto.request.StatisticRequest;
+import spring.project.base.dto.response.PlanRegisterStatisticResponse;
 import spring.project.base.dto.response.RevenueStatisticResponse;
 import spring.project.base.service.IStatisticService;
 
@@ -28,14 +29,15 @@ public class StatisticsController {
         this.statisticService = statisticService;
     }
 
-    @Operation(summary = "Lấy thống kê từ tháng A đến tháng B")
+    @Operation(summary = "Lấy thống kê từ tháng A đến tháng B ( Biểu đồ cột )")
     @GetMapping("/revenues")
     public ResponseEntity<ApiResponse<List<RevenueStatisticResponse>>> getRevenues(@RequestParam @NotNull Instant fromDate, @RequestParam @NotNull Instant toDate) throws JsonProcessingException {
         return ResponseEntity.ok(ApiResponse.success(this.statisticService.getRevenueStatistic(new StatisticRequest(fromDate, toDate))));
     }
-//    @Operation(summary = "Lấy thống kê từ tháng A đến tháng B")
-//    @GetMapping("/registers")
-//    public ResponseEntity<ApiResponse<List<RevenueStatisticResponse>>> getRevenues(@RequestParam @NotNull Instant fromDate, @RequestParam @NotNull Instant toDate) throws JsonProcessingException {
-//        return ResponseEntity.ok(ApiResponse.success(this.statisticService.getRevenueStatistic(new StatisticRequest(fromDate, toDate))));
-//    }
+
+    @Operation(summary = "Lấy thống kê các gói tập từ tháng A đến tháng B ( Biểu đồ tròn )")
+    @GetMapping("/registers")
+    public ResponseEntity<ApiResponse<List<PlanRegisterStatisticResponse>>> getGymPlanRegister(@RequestParam @NotNull Instant fromDate, @RequestParam @NotNull Instant toDate) throws JsonProcessingException {
+        return ResponseEntity.ok(ApiResponse.success(this.statisticService.getGymPlanRegisterStatistic(new StatisticRequest(fromDate, toDate))));
+    }
 }

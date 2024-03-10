@@ -2,8 +2,10 @@ package spring.project.base.service.Impl;
 
 import org.springframework.stereotype.Service;
 import spring.project.base.dto.request.StatisticRequest;
+import spring.project.base.dto.response.PlanRegisterStatisticResponse;
 import spring.project.base.dto.response.RevenueStatisticResponse;
 import spring.project.base.entity.Account;
+import spring.project.base.entity.GymPlan;
 import spring.project.base.entity.GymPlanRegister;
 import spring.project.base.repository.GymPlanRegisterRepository;
 import spring.project.base.service.IStatisticService;
@@ -58,5 +60,33 @@ public class StatisticServiceImpl implements IStatisticService {
         });
 
         return revenueStatisticResponses;
+    }
+
+    @Override
+    public List<PlanRegisterStatisticResponse> getGymPlanRegisterStatistic(StatisticRequest request) {
+        Account gymOwner = SecurityUtil.getCurrentUser();
+        Instant fromMonth = TimeUtil.toFirstDayOfMonth(request.getFromMonth()).toInstant();
+        Instant toMonth = TimeUtil.toLastDayOfMonth(request.getToMonth()).toInstant();
+
+        List<GymPlanRegister> gymPlanRegisters = gymPlanRegisterRepository
+                .findByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqualAndGymPlan_GymOwner(fromMonth, toMonth, gymOwner.getId());
+
+        Map<Long, List<GymPlanRegister>> registerGymPlan = gymPlanRegisters.stream()
+                .collect(Collectors.groupingBy(
+                        gymPlanRegister -> gymPlanRegister.getGymPlan().getId()
+                ));
+        List<PlanRegisterStatisticResponse> registerStatisticResponses = new ArrayList<>();
+
+        registerGymPlan.forEach((gymPlanId, groupedGymPlanRegister) -> {
+            PlanRegisterStatisticResponse planRegisterStatisticResponse = new PlanRegisterStatisticResponse();
+            GymPlanRegister gymPlanRegister = groupedGymPlanRegister.get(0);
+            GymPlan gymPlan = gymPlanRegister.getGymPlan();
+            int registerNumber = groupedGymPlanRegister.size();
+            planRegisterStatisticResponse.setNumberOfRegister(registerNumber);
+            planRegisterStatisticResponse.setName(gymPlan.getName());
+            planRegisterStatisticResponse.setId(gymPlan.getId());
+            registerStatisticResponses.add(planRegisterStatisticResponse);
+        });
+        return registerStatisticResponses;
     }
 }
