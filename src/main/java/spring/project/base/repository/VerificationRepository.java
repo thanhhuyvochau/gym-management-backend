@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface VerificationRepository extends JpaRepository<Verification, Long> {
     Optional<Verification> findByCode(String code);
+    Optional<Verification> findByCodeAndIsUsed(String code, boolean isUsed);
 }

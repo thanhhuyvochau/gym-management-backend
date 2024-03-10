@@ -6,10 +6,7 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import spring.project.base.common.ApiPage;
 import spring.project.base.config.security.oauth2.dto.LocalUser;
 import spring.project.base.constant.EAccountRole;
-import spring.project.base.dto.request.AccountFilterRequest;
-import spring.project.base.dto.request.ChangePasswordRequest;
-import spring.project.base.dto.request.RegisterAccountRequest;
-import spring.project.base.dto.request.UpdateAccountRequest;
+import spring.project.base.dto.request.*;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.response.VerifyResponse;
 
@@ -33,4 +30,8 @@ public interface IAccountService {
     ApiPage<UserResponse> getAccountsWithFilter(AccountFilterRequest request, EAccountRole role, Pageable pageable);
 
     UserResponse updateAccountProfile(UpdateAccountRequest request) throws IOException;
+
+    Boolean getOtpCodeForChangePassword(String email);
+    Boolean changeForgetPassword(ForgetPasswordChange request);
+
 }

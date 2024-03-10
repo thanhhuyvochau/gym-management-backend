@@ -20,10 +20,7 @@ import spring.project.base.config.security.oauth2.user.OAuth2UserInfo;
 import spring.project.base.config.security.oauth2.user.OAuth2UserInfoFactory;
 import spring.project.base.constant.EAccountRole;
 import spring.project.base.constant.EVerifyStatus;
-import spring.project.base.dto.request.AccountFilterRequest;
-import spring.project.base.dto.request.ChangePasswordRequest;
-import spring.project.base.dto.request.RegisterAccountRequest;
-import spring.project.base.dto.request.UpdateAccountRequest;
+import spring.project.base.dto.request.*;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.dto.response.VerifyResponse;
 import spring.project.base.entity.Account;
@@ -51,6 +48,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.INVALID_EMAIL;
 import static spring.project.base.util.constant.Constants.ErrorMessage.Invalid.INVALID_PASSWORD;
@@ -124,7 +122,7 @@ public class AccountServiceImpl implements IAccountService {
                             .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.NEW_PASSWORD_DUPLICATE));
                 }
             }
-            String encodedNewPassword = encoder.encode(changePasswordRequest.getNewPassword());
+            String encodedNewPassword = encoder.encode(changePasswordRequest.getNewPassword().trim());
             account.setPassword(encodedNewPassword);
             account = accountRepository.save(account);
             return account.getId();
@@ -157,7 +155,7 @@ public class AccountServiceImpl implements IAccountService {
 //                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Invalid.INVALID_BIRTH_DAY));
 //        }
         account.setEmail(createAccountRequest.getEmail());
-        account.setPassword(encoder.encode(createAccountRequest.getPassword()));
+        account.setPassword(encoder.encode(createAccountRequest.getPassword().trim()));
         account.setRole(role);
         account.setGender(createAccountRequest.getGender());
         account.setFullName(createAccountRequest.getFullName());
@@ -168,18 +166,18 @@ public class AccountServiceImpl implements IAccountService {
         Account savedAccount = accountRepository.save(account);
 
         // Send verify mail
-        /**
-         * emailUtil.sendVerifyEmailTo(savedAccount);
-         * Notification notification =
-         * NotificationDirector.buildRegisterSuccessAccount(account);
-         * notification = notificationRepository.save(notification);
-         * ResponseMessage responseMessage =
-         * ConvertUtil.convertNotificationToResponseMessage(notification,
-         * account);
-         * webSocketUtil.sendPrivateNotification(createAccountRequest.getEmail(),
-         * responseMessage);
-         *
-         */
+
+//        emailUtil.sendVerifyEmailTo(savedAccount);
+//          Notification notification =
+//          NotificationDirector.buildRegisterSuccessAccount(account);
+//          notification = notificationRepository.save(notification);
+//          ResponseMessage responseMessage =
+//          ConvertUtil.convertNotificationToResponseMessage(notification,
+//          account);
+//          webSocketUtil.sendPrivateNotification(createAccountRequest.getEmail(),
+//          responseMessage);
+
+
         return savedAccount.getId();
     }
 
@@ -220,8 +218,10 @@ public class AccountServiceImpl implements IAccountService {
         EVerifyStatus status = null;
         if (verification.getIsUsed()) { // Verification phải chưa được sử dụng
             status = EVerifyStatus.USED;
+            throw ApiException.create(status.getStatus()).withMessage(status.getMessage());
         } else if (!TimeUtil.isLessThanHourDurationOfNow(createdDate, 24)) { // Thời gian xác thực tối đa là 1 ngày
             status = EVerifyStatus.EXPIRED;
+            throw ApiException.create(status.getStatus()).withMessage(status.getMessage());
         } else {
             account.setVerified(true);
             verification.setIsUsed(true);
@@ -309,7 +309,7 @@ public class AccountServiceImpl implements IAccountService {
     private Account buildStudentUser(final SignUpRequest signUpRequest) {
         Account Account = new Account();
         Account.setEmail(signUpRequest.getEmail());
-        Account.setPassword(encoder.encode(signUpRequest.getPassword()));
+        Account.setPassword(encoder.encode(signUpRequest.getPassword().trim()));
         Account.setProvider(signUpRequest.getSocialProvider());
         Account.setStatus(true);
         Account.setVerified(true);
@@ -358,5 +358,45 @@ public class AccountServiceImpl implements IAccountService {
 
         accountRepository.save(currentUser);
         return ConvertUtil.convertUsertoUserResponse(currentUser);
+    }
+
+    @Override
+    public Boolean getOtpCodeForChangePassword(String email) {
+        Account account = accountRepository.findByEmail(email)
+                .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Account not found with email:" + email));
+        emailUtil.sendOtpForChangePassWord(account);
+        return true;
+    }
+
+    @Override
+    public Boolean changeForgetPassword(ForgetPasswordChange request) {
+        Account account = accountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Account not found with email:" + request.getEmail()));
+
+        Verification verification = verificationRepository.findByCode(request.getOtpCode())
+                .orElseThrow(() -> ApiException.create(HttpStatus.NOT_FOUND).withMessage(
+                        messageUtil.getLocalMessage(Constants.ErrorMessage.VERIFY_CODE_NOT_FOUND_BY_CODE) + request.getOtpCode()));
+
+        if (!request.getEmail().trim().equals(verification.getUser().getEmail())) {
+            throw ApiException.create(HttpStatus.FORBIDDEN).withMessage("OTP not valid!!");
+        }
+
+        Instant createdDate = verification.getCreated();
+        EVerifyStatus status = null;
+        if (verification.getIsUsed()) { // Verification phải chưa được sử dụng
+            status = EVerifyStatus.USED;
+            throw ApiException.create(status.getStatus()).withMessage(status.getMessage());
+        } else if (!TimeUtil.isLessThanHourDurationOfNow(createdDate, 24)) { // Thời gian xác thực tối đa là 1 ngày
+            status = EVerifyStatus.EXPIRED;
+            throw ApiException.create(status.getStatus()).withMessage(status.getMessage());
+        } else {
+            account.setVerified(true);
+            account.setPassword(encoder.encode(request.getPassword().trim()));
+            verification.setIsUsed(true);
+            accountRepository.save(account);
+            verificationRepository.save(verification);
+        }
+
+        return true;
     }
 }

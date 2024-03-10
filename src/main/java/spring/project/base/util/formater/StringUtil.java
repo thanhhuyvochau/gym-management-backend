@@ -1,5 +1,6 @@
 package spring.project.base.util.formater;
 
+import java.util.Random;
 import java.util.regex.Pattern;
 
 public class StringUtil {
@@ -14,6 +15,7 @@ public class StringUtil {
     //This regex pattern use RFC standard( version RFC-5322)
     private static final Pattern EMAIL_REGEX_PATTERN = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
     private static final Pattern VIETNAMESE_MOBILE_PHONE_NUMBER_PATTERN = Pattern.compile("(?:03|05|07|08|09|01[2689])[0-9]{8}\\b");
+
     /**
      * Checks if a string is null or empty.
      *
@@ -47,7 +49,7 @@ public class StringUtil {
     /**
      * Truncates a string to a maximum length.
      *
-     * @param s the string to truncate
+     * @param s         the string to truncate
      * @param maxLength the maximum length of the string
      * @return the truncated string, or the original string if it is shorter than maxLength
      */
@@ -73,25 +75,38 @@ public class StringUtil {
         }
     }
 
-    public static boolean isValidFacebookLink(String url){return FACEBOOK_REGEX_PATTERN.matcher(url).matches();}
+    public static boolean isValidFacebookLink(String url) {
+        return FACEBOOK_REGEX_PATTERN.matcher(url).matches();
+    }
 
-    public static boolean isValidInstagramLink(String url){
+    public static boolean isValidInstagramLink(String url) {
         return INSTAGRAM_REGEX_PATTERN.matcher(url).matches();
     }
 
-    public static boolean isValidTwitterLink(String url){
+    public static boolean isValidTwitterLink(String url) {
         return TWITTER_REGEX_PATTERN.matcher(url).matches();
     }
 
-    public static boolean isValidLinkedinLink(String url){
+    public static boolean isValidLinkedinLink(String url) {
         return LINKEDIN_REGEX_PATTERN.matcher(url).matches();
     }
 
-    public static boolean isValidWebsite(String url){
+    public static boolean isValidWebsite(String url) {
         return WEBSITE_REGEX_PATTERN.matcher(url).matches();
     }
-    public static boolean isValidEmailAddress(String url){
+
+    public static boolean isValidEmailAddress(String url) {
         return EMAIL_REGEX_PATTERN.matcher(url).matches();
     }
-    public static boolean isValidVietnameseMobilePhoneNumber(String phoneNumber){return VIETNAMESE_MOBILE_PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches();}
+
+    public static boolean isValidVietnameseMobilePhoneNumber(String phoneNumber) {
+        return VIETNAMESE_MOBILE_PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches();
+    }
+
+    public static String generateOTP() {
+        // Generate a random 6-digit OTP
+        Random random = new Random();
+        int otp = 100000 + random.nextInt(900000);
+        return String.valueOf(otp);
+    }
 }

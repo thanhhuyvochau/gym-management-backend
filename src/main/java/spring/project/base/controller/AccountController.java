@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import spring.project.base.common.ApiPage;
 import spring.project.base.common.ApiResponse;
 import spring.project.base.constant.EAccountRole;
-import spring.project.base.dto.request.AccountFilterRequest;
-import spring.project.base.dto.request.ChangePasswordRequest;
-import spring.project.base.dto.request.RegisterAccountRequest;
-import spring.project.base.dto.request.UpdateAccountRequest;
+import spring.project.base.dto.request.*;
 import spring.project.base.dto.response.UserResponse;
 import spring.project.base.service.IAccountService;
 
@@ -72,5 +69,17 @@ public class AccountController {
     @PreAuthorize("hasAnyRole('ROLE_MANAGER','ROLE_GYM_OWNER')")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserProfile(@ModelAttribute UpdateAccountRequest request) throws IOException {
         return ResponseEntity.ok(ApiResponse.success(iUserService.updateAccountProfile(request)));
+    }
+
+    @GetMapping("/otp/forget-password")
+    @Operation(summary = "Lấy OTP để thay đổi khi quên password")
+    public ResponseEntity<ApiResponse<Boolean>> getOtpForChangePassword(@RequestParam String email) {
+        return ResponseEntity.ok(ApiResponse.success(iUserService.getOtpCodeForChangePassword(email)));
+    }
+
+    @PutMapping("/forget-password")
+    @Operation(summary = "Thay đổi password đã quên")
+    public ResponseEntity<ApiResponse<Boolean>> changePasswordForget(@RequestBody ForgetPasswordChange request) {
+        return ResponseEntity.ok(ApiResponse.success(iUserService.changeForgetPassword(request)));
     }
 }

@@ -13,6 +13,7 @@ import spring.project.base.service.IAccountService;
 import spring.project.base.service.IAuthService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @RestController
@@ -46,5 +47,7 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Boolean>> resendVerifyEmail() {
         return ResponseEntity.ok(ApiResponse.success(userService.resendVerifyEmail()));
     }
+
+
 }
 

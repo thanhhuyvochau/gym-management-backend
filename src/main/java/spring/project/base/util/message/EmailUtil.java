@@ -14,9 +14,11 @@ import spring.project.base.common.ApiException;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.Verification;
 import spring.project.base.repository.VerificationRepository;
+import spring.project.base.util.formater.StringUtil;
 
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,6 +31,9 @@ public class EmailUtil {
     @Autowired
     @Qualifier("resetPasswordTemplate")
     private String resetPasswordTemplate;
+    @Autowired
+    @Qualifier("otpTemplate")
+    private String otpTemplate;
     private final JavaMailSender mailSender;
     private final VerificationRepository verificationRepository;
     private final String SEND_FROM = "noreply@gymstamina.gmail";
@@ -46,9 +51,30 @@ public class EmailUtil {
         this.messageUtil = messageUtil;
     }
 
+    public void sendOtpForChangePassWord(Account account) {
+        try {
+            String subject = "Mã OTP";
+            String otpCode;
+            Optional<Verification> existCodeInstant;
+            do {
+                otpCode = StringUtil.generateOTP();
+                existCodeInstant = verificationRepository.findByCodeAndIsUsed(otpCode, false);
+            } while (existCodeInstant.isPresent());
+
+            Verification.Builder builder = Verification.Builder.getBuilder();
+            Verification verification = builder.withCode(otpCode).withUser(account).build().getObject();
+            String replace = otpTemplate.replace("%s", otpCode);
+            sendHtmlEmail(replace, account.getEmail(), SEND_FROM, subject);
+            verificationRepository.save(verification);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw ApiException.create(HttpStatus.INTERNAL_SERVER_ERROR).withMessage("Gửi mail xác thực thất bại!");
+        }
+    }
+
     public void sendVerifyEmailTo(Account account) {
         try {
-            String subject = "Verify Account";
+            String subject = "Xác thực tài khoản của bạn";
             String verifyCode = String.valueOf(UUID.randomUUID());
             String activeLink = hostURL + verifyCode;
             Verification.Builder builder = Verification.Builder.getBuilder();

@@ -26,7 +26,10 @@ public class AppConfig {
     public String verifyAccountTemplate() {
         return ResourceReader.readFileToString("verify-account.html");
     }
-
+    @Bean
+    public String otpTemplate() {
+        return ResourceReader.readFileToString("opt-form.html");
+    }
     @Bean
     public String resetPasswordTemplate() {
         return ResourceReader.readFileToString("reset-password.html");

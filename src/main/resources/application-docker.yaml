@@ -7,7 +7,6 @@ spring:
     url: jdbc:mysql://mysqldb/temp?useSSL=false
     username: root
     password: 123456789
-
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
@@ -44,3 +43,6 @@ minio:
   bucket:
     name: gmp
   endpoint: http://localhost:9000
+
+host:
+  url: https://localhost:4200/confirm_email/
