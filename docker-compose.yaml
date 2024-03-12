@@ -1,6 +1,20 @@
 version: "3.8"
 
 services:
+  # Spring Boot Service
+  app-gmp:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - mysqldb
+    env_file: ./.env
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    networks:
+      - app
+
   # Minio Service
   minio:
     env_file: ./.env
@@ -9,6 +23,9 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
     volumes:
       - ./data/minio:/data
     restart: always
@@ -32,27 +49,44 @@ services:
     networks:
       - app
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 1m30s
       timeout: 20s
       retries: 10
 
-  # Spring Boot Service
-  app-gmp:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    depends_on:
-      - mysqldb
-    env_file: ./.env
-    restart: on-failure
+  # MongoDB Service
+  mongodb:
+    image: mongo:6.0.14
+    restart: unless-stopped
     ports:
-      - "8083:8080"
+      - "27016:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD", "mongo", "admin", "--eval", "db.runCommand({ ping: 1 })" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Face Detection System Service
+  face-system:
+    build:
+      context: ../face-recognition-rest-api
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
     networks:
       - app
 
+
 volumes:
   db-test:
+  mongo-data:
 
 networks:
   app:

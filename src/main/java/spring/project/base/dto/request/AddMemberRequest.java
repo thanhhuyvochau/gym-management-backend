@@ -6,6 +6,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.constant.EGenderType;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -16,7 +17,7 @@ public class AddMemberRequest {
     private String phoneNumber = "";
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Instant birthday;
-    @Nullable
+    @NotNull
     private MultipartFile image;
     @Nullable
     private Long gymPlanId;

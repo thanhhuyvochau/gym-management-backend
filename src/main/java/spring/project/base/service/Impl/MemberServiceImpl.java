@@ -100,6 +100,8 @@ public class MemberServiceImpl implements IMemberService {
         Account gymOwner = SecurityUtil.getCurrentUser();
         try {
             MemberData memberData = new MemberData();
+            memberRepository.save(member);
+
             memberData.setBirthday(request.getBirthday());
             memberData.setGender(request.getGender());
             memberData.setFullName(request.getFullName());
@@ -112,9 +114,11 @@ public class MemberServiceImpl implements IMemberService {
                 ObjectWriteResponse objectWriteResponse = minioAdapter.uploadFile(name, file.getContentType(), file.getInputStream(), file.getSize());
                 String imageURL = MiniIOUtil.buildUrl(minioUrl, objectWriteResponse);
                 memberData.setMemberImage(imageURL);
+                if (!sendImageToFaceRecognizeSystemForCreate(file.getResource(), member.getId())) {
+                    throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Update image to face system failed !!");
+                }
             }
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
-            memberRepository.save(member);
 
             if (request.getGymPlanId() != null) {
                 Long gymPlanId = request.getGymPlanId();
@@ -152,6 +156,9 @@ public class MemberServiceImpl implements IMemberService {
                 ObjectWriteResponse objectWriteResponse = minioAdapter.uploadFile(name, file.getContentType(), file.getInputStream(), file.getSize());
                 String imageURL = MiniIOUtil.buildUrl(minioUrl, objectWriteResponse);
                 memberData.setMemberImage(imageURL);
+                if (!sendImageToFaceRecognizeSystemForCreate(file.getResource(), member.getId())) {
+                    throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Update image to face system failed !!");
+                }
             }
 
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
@@ -263,7 +270,7 @@ public class MemberServiceImpl implements IMemberService {
     @Override
     public AttendanceResponse attendance(Resource memberFace) throws JsonProcessingException {
         Account gymOwner = SecurityUtil.getCurrentUser();
-        List<ResultEntry> result = sendImageToFaceRecognizeSystem(memberFace);
+        List<ResultEntry> result = sendImageToFaceRecognizeSystemForDetect(memberFace);
 
         AttendanceResponse attendanceResponse = new AttendanceResponse();
         if (!result.isEmpty()) {
@@ -296,7 +303,7 @@ public class MemberServiceImpl implements IMemberService {
         return attendanceResponse;
     }
 
-    private List<ResultEntry> sendImageToFaceRecognizeSystem(Resource memberFace) throws JsonProcessingException {
+    private List<ResultEntry> sendImageToFaceRecognizeSystemForDetect(Resource memberFace) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         // Set up request headers and body
         HttpHeaders headers = new HttpHeaders();
@@ -312,5 +319,18 @@ public class MemberServiceImpl implements IMemberService {
         RecognitionResult recognitionResult = objectMapper.readValue(responseEntity.getBody(), RecognitionResult.class);
         List<ResultEntry> result = recognitionResult.getResult();
         return result;
+    }
+
+    private boolean sendImageToFaceRecognizeSystemForCreate(Resource memberFace, long memberId) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", memberFace); // Use the same key as expected by the server
+        body.add("label", memberId);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        String targetUrl = createFaceURL;
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(targetUrl, requestEntity, String.class);
+        return responseEntity.getStatusCodeValue() == 200;
     }
 }
