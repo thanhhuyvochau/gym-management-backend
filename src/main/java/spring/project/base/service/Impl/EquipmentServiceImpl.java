@@ -119,6 +119,11 @@ public class EquipmentServiceImpl implements IEquipmentService {
                 log.error(e.getMessage());
             }
         }
+        equipment.setCode(request.getCode());
+        equipment.setName(request.getName());
+        equipment.setQuantity(request.getQuantity());
+        equipment.setCostPer(request.getCostPer());
+        equipment.setStatus(request.isStatus());
         this.equipmentRepository.save(equipment);
         return ConvertUtil.convertEquipmentToResponse(equipment);
     }

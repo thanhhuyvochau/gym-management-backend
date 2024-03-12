@@ -6,13 +6,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.common.ApiPage;
 import spring.project.base.common.ApiResponse;
 import spring.project.base.dto.request.AddMemberRequest;
+import spring.project.base.dto.request.ImageRequest;
 import spring.project.base.dto.request.RegisterGymPlanRequest;
 import spring.project.base.dto.request.UpdateMemberRequest;
+import spring.project.base.dto.response.AttendanceResponse;
 import spring.project.base.dto.response.MemberResponse;
 import spring.project.base.service.IMemberService;
+import spring.project.base.util.formater.FileUtil;
 
 
 @RestController
@@ -54,5 +58,11 @@ public class MemberController {
     @PutMapping("/{id}/plan")
     public ResponseEntity<ApiResponse<Boolean>> extendGymPlan(@PathVariable("id") Long id, @RequestBody RegisterGymPlanRequest request) {
         return ResponseEntity.ok(ApiResponse.success(memberService.extendMemberPlan(id, request)));
+    }
+
+    @PostMapping("/process-face")
+    public ResponseEntity<ApiResponse<AttendanceResponse>> processFace(@RequestParam MultipartFile imageRequest) throws JsonProcessingException {
+        // Access the image data and detection information
+        return ResponseEntity.ok(ApiResponse.success(memberService.attendance(imageRequest.getResource())));
     }
 }

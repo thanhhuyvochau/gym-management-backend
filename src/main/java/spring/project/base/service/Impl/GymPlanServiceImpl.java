@@ -32,14 +32,16 @@ public class GymPlanServiceImpl implements IGymPlanService {
 
     @Override
     public GymPlanResponse getGymPlan(Long id) {
-        GymPlan gymPlan = gymPlanRepository.findById(id)
+        Account gymOwner = SecurityUtil.getCurrentUser();
+        GymPlan gymPlan = gymPlanRepository.findByIdAndGymOwner(id, gymOwner)
                 .orElseThrow(() -> new RuntimeException("GymPlan not found with id: " + id));
         return GymPlanResponse.mapFromEntity(gymPlan);
     }
 
     @Override
     public List<GymPlanResponse> getAllGymPlans() {
-        List<GymPlan> allGymPlans = gymPlanRepository.findAll();
+        Account gymOwner = SecurityUtil.getCurrentUser();
+        List<GymPlan> allGymPlans = gymPlanRepository.findAllByGymOwner(gymOwner);
         return allGymPlans.stream()
                 .map(GymPlanResponse::mapFromEntity)
                 .collect(Collectors.toList());

@@ -6,17 +6,24 @@ import io.minio.ObjectWriteResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import spring.project.base.common.ApiException;
 import spring.project.base.common.ApiPage;
 import spring.project.base.dto.other.MemberData;
+import spring.project.base.dto.other.RecognitionResult;
+import spring.project.base.dto.other.ResultEntry;
 import spring.project.base.dto.request.AddMemberRequest;
 import spring.project.base.dto.request.RegisterGymPlanRequest;
 import spring.project.base.dto.request.UpdateMemberRequest;
+import spring.project.base.dto.response.AttendanceResponse;
 import spring.project.base.dto.response.MemberResponse;
 import spring.project.base.entity.Account;
 import spring.project.base.entity.GymPlan;
@@ -39,6 +46,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,6 +59,10 @@ public class MemberServiceImpl implements IMemberService {
     private String minioUrl;
     private final GymPlanRegisterRepository gymPlanRegisterRepository;
     private final GymPlanRepository gymPlanRepository;
+    @Value("${detection.recogize-url}")
+    private String checkFaceURL;
+    @Value("${detection.create-url}")
+    private String createFaceURL;
 
     public MemberServiceImpl(MemberRepository memberRepository, ObjectMapper objectMapper, MinioAdapter minioAdapter, GymPlanRegisterRepository gymPlanRegisterRepository, GymPlanRepository gymPlanRepository) {
         this.memberRepository = memberRepository;
@@ -144,7 +156,7 @@ public class MemberServiceImpl implements IMemberService {
 
             member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
             memberRepository.save(member);
-            if(request.getGymPlanId() != null){
+            if (request.getGymPlanId() != null) {
                 GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
                         .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
                 regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
@@ -221,7 +233,8 @@ public class MemberServiceImpl implements IMemberService {
         }
     }
 
-    private Instant getCurrentActiveGymPlanExpiredDate(Member member) {
+    @Override
+    public Instant getCurrentActiveGymPlanExpiredDate(Member member) {
         GymPlanRegister currentActivePlan = this.gymPlanRegisterRepository.findByMemberAndToDateAfter(member, Instant.now());
         return currentActivePlan == null ? null : currentActivePlan.getToDate();
     }
@@ -247,5 +260,57 @@ public class MemberServiceImpl implements IMemberService {
         return firstGymPlanRegister;
     }
 
+    @Override
+    public AttendanceResponse attendance(Resource memberFace) throws JsonProcessingException {
+        Account gymOwner = SecurityUtil.getCurrentUser();
+        List<ResultEntry> result = sendImageToFaceRecognizeSystem(memberFace);
 
+        AttendanceResponse attendanceResponse = new AttendanceResponse();
+        if (!result.isEmpty()) {
+            Optional<ResultEntry> firstMatch = result.stream().filter(r -> !r.getLabel().equals("unknown")).findFirst();
+            if (firstMatch.isPresent()) {
+                ResultEntry resultEntry = (ResultEntry) firstMatch.get();
+                String label = resultEntry.getLabel();
+
+                long memberId = Integer.parseInt(label);
+                Member detectMember = memberRepository.findByIdAndGymOwner_Id(memberId, gymOwner.getId())
+                        .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found member for detect with id:" + memberId));
+                // Find active plan of member or recent plan of member
+                // If member has active plan return true and if not return false
+                Instant currentActiveGymPlanExpiredDate = getCurrentActiveGymPlanExpiredDate(detectMember);
+                if (currentActiveGymPlanExpiredDate != null) {
+                    attendanceResponse.setStatus(true);
+                    attendanceResponse.setMessage("Detect successfully!!");
+                } else {
+                    attendanceResponse.setStatus(false);
+                    attendanceResponse.setMessage("Member ship of member is expired!!");
+                }
+            } else {
+                attendanceResponse.setStatus(false);
+                attendanceResponse.setMessage("Detect fail!!");
+            }
+        } else {
+            attendanceResponse.setStatus(false);
+            attendanceResponse.setMessage("Detect fail!!");
+        }
+        return attendanceResponse;
+    }
+
+    private List<ResultEntry> sendImageToFaceRecognizeSystem(Resource memberFace) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        // Set up request headers and body
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", memberFace); // Use the same key as expected by the server
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        // Replace with the target system's endpoint URL
+        String targetUrl = checkFaceURL;
+        // Send the request
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(targetUrl, requestEntity, String.class);
+        RecognitionResult recognitionResult = objectMapper.readValue(responseEntity.getBody(), RecognitionResult.class);
+        List<ResultEntry> result = recognitionResult.getResult();
+        return result;
+    }
 }

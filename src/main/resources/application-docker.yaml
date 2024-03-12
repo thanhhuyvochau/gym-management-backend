@@ -46,3 +46,7 @@ minio:
 
 host:
   url: https://localhost:4200/confirm_email/
+
+detection:
+  recogize-url: http://face-system:5000/check-face
+  create-url: http://face-system:5000/post-face

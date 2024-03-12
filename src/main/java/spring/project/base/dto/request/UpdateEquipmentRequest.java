@@ -21,4 +21,5 @@ public class UpdateEquipmentRequest {
     private int quantity = 0;
     @Nullable
     private MultipartFile image;
+    private boolean status;
 }

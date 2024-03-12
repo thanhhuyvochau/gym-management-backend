@@ -25,6 +25,10 @@ spring:
 app:
   secret-key: J@!gt*K
   oauth2-redirect: https://mismart.vercel.app/login-success
+  detection:
+    url:
+      detect: http://localhost:5000/check-face
+      create: http://localhost:5000/post-face
 beholder:
   app:
     jwtSecret:
@@ -37,6 +41,10 @@ logging:
   file:
     path: /logs
     name: /logs/application.log
+
+detection:
+  recogize-url: http://localhost:5000/check-face
+  create-url: http://localhost:5000/post-face
 
 
 
