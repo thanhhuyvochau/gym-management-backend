@@ -189,19 +189,6 @@ public class AccountServiceImpl implements IAccountService {
         if (!StringUtil.isValidEmailAddress(request.getEmail())) {
             throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(INVALID_EMAIL));
         }
-//        if (!StringUtil.isValidVietnameseMobilePhoneNumber(request.getPhone())) {
-//            throw ApiException.create(HttpStatus.BAD_REQUEST)
-//                    .withMessage(messageUtil.getLocalMessage(INVALID_PHONE_NUMBER));
-//        }
-//        if (StringUtil.isNullOrEmpty(request.getFullName())) {
-//            throw ApiException.create(HttpStatus.BAD_REQUEST)
-//                    .withMessage(messageUtil.getLocalMessage(Constants.ErrorMessage.Empty.EMPTY_FULL_NAME));
-//        }
-//        boolean isValidGender = request.getGender().equals(EGenderType.MALE)
-//                || request.getGender().equals(EGenderType.FEMALE);
-//        if (!isValidGender) {
-//            throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage(messageUtil.getLocalMessage(INVALID_GENDER));
-//        }
         if (!PasswordUtil.isValidPassword(request.getPassword())) {
             throw ApiException.create(HttpStatus.BAD_REQUEST)
                     .withMessage(messageUtil.getLocalMessage(INVALID_PASSWORD));

@@ -20,7 +20,7 @@ public class AddMemberRequest {
     @NotNull
     private MultipartFile image;
     @Nullable
-    private Long gymPlanId;
+    private Long plan;
     @Nullable
     private BigDecimal actualPrice = BigDecimal.ZERO;
     @Nullable

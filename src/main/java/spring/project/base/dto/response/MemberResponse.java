@@ -15,6 +15,7 @@ public class MemberResponse {
     private String memberImage;
     private Instant dateEnrolled;
     private Instant dateExpiration;
+    private String planName = "No";
 }
 
 

@@ -10,3 +10,4 @@ WORKDIR /app
 COPY --from=build /app/target/Bsmart-0.0.1-SNAPSHOT.jar /app/Bsmart-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=docker","Bsmart-0.0.1-SNAPSHOT.jar"]
+

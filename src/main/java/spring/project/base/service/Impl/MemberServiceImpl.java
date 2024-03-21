@@ -86,6 +86,7 @@ public class MemberServiceImpl implements IMemberService {
                 if (firstGymPlanRegisterOfMember != null) {
                     memberResponse.setDateEnrolled(firstGymPlanRegisterOfMember.getFromDate());
                     memberResponse.setDateExpiration(firstGymPlanRegisterOfMember.getToDate());
+                    memberResponse.setPlanName(firstGymPlanRegisterOfMember.getGymPlan().getName());
                 }
                 return memberResponse;
             } catch (JsonProcessingException e) {
@@ -118,17 +119,18 @@ public class MemberServiceImpl implements IMemberService {
                     throw ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Update image to face system failed !!");
                 }
             }
-            member.setEncodeMemberData(EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData)));
+            String encrypt = EncryptionUtils.encrypt(objectMapper.writeValueAsString(memberData));
+            member.setEncodeMemberData(encrypt);
 
-            if (request.getGymPlanId() != null) {
-                Long gymPlanId = request.getGymPlanId();
+            if (request.getPlan() != null) {
+                Long gymPlanId = request.getPlan();
                 GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
                         .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
                 regisGymPlan(member, gymPlanId, request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
-            return false;
+            throw new RuntimeException(e);
         }
         return true;
     }
@@ -242,7 +244,7 @@ public class MemberServiceImpl implements IMemberService {
 
     @Override
     public Instant getCurrentActiveGymPlanExpiredDate(Member member) {
-        GymPlanRegister currentActivePlan = this.gymPlanRegisterRepository.findByMemberAndToDateAfter(member, Instant.now());
+        GymPlanRegister currentActivePlan = getFirstGymPlanRegisterOfMember(member);
         return currentActivePlan == null ? null : currentActivePlan.getToDate();
     }
 
