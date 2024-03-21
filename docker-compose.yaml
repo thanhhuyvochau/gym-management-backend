@@ -73,7 +73,7 @@ services:
   # Face Detection System Service
   face-system:
     build:
-      context: ../face-recognition-rest-recognization
+      context: ../gym-management-face-recognization
       dockerfile: Dockerfile
     restart: always
     ports:
