@@ -21,7 +21,7 @@ public class UpdateMemberRequest {
     @Nullable
     private Long gymPlanId;
     @Nullable
-    private BigDecimal actualPrice = BigDecimal.ZERO;
+    private BigDecimal price = BigDecimal.ZERO;
     @Nullable
     private Instant fromDate;
 }

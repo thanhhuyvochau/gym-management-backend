@@ -126,7 +126,7 @@ public class MemberServiceImpl implements IMemberService {
                 Long gymPlanId = request.getPlan();
                 GymPlan gymPlan = gymPlanRepository.findById(gymPlanId)
                         .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + gymPlanId));
-                regisGymPlan(member, gymPlanId, request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+                regisGymPlan(member, gymPlanId, request.getFromDate(), request.getPrice(), gymOwner, gymPlan);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -168,7 +168,7 @@ public class MemberServiceImpl implements IMemberService {
             if (request.getGymPlanId() != null) {
                 GymPlan gymPlan = gymPlanRepository.findById(request.getGymPlanId())
                         .orElseThrow(() -> ApiException.create(HttpStatus.BAD_REQUEST).withMessage("Not found gym plan with id:" + request.getGymPlanId()));
-                regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getActualPrice(), gymOwner, gymPlan);
+                regisGymPlan(member, request.getGymPlanId(), request.getFromDate(), request.getPrice(), gymOwner, gymPlan);
             }
         } catch (Exception e) {
             log.error(e.getMessage());

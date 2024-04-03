@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysqldb/temp?useSSL=false
+    url: jdbc:mysql://mysqldb/gmp?useSSL=false
     username: root
     password: 123456789
   jpa:

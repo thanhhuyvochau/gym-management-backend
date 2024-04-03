@@ -22,7 +22,7 @@ public class AddMemberRequest {
     @Nullable
     private Long plan;
     @Nullable
-    private BigDecimal actualPrice = BigDecimal.ZERO;
+    private BigDecimal price = BigDecimal.ZERO;
     @Nullable
     private Instant fromDate;
 }

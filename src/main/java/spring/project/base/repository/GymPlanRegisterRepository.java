@@ -16,7 +16,8 @@ public interface GymPlanRegisterRepository extends JpaRepository<GymPlanRegister
     List<GymPlanRegister> findByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqual(Instant fromDate, Instant toDate);
 
 
-    @Query(value = "SELECT gpr FROM GymPlanRegister gpr WHERE gpr.created >= ?1 AND gpr.created <= ?2 ")
+    @Query(value = "SELECT gpr FROM GymPlanRegister gpr" +
+            " WHERE gpr.created >= ?1 AND gpr.created <= ?2 and gpr.gymPlan.gymOwner.id = ?3 ")
     List<GymPlanRegister> findByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqualAndGymPlan_GymOwner(Instant fromDate, Instant toDate, Long gymOwnerId);
 
 }

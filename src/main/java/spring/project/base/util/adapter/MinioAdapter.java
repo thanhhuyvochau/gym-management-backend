@@ -27,7 +27,7 @@ public class MinioAdapter {
     @Value("${minio.bucket.name}")
     String defaultBucketName;
 
-    private List<String> acceptContentTypes = new ArrayList<>(Arrays.asList("image/jpeg", "image/png"));
+    private final List<String> acceptContentTypes = new ArrayList<>(Arrays.asList("image/jpeg", "image/png"));
 
     public ObjectWriteResponse uploadFile(String name, String contentType, InputStream content, long size) {
         if (!acceptContentTypes.contains(contentType)) {
